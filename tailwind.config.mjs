@@ -54,16 +54,83 @@ const config = {
   theme: {
     extend: {
       colors: {
-        primary: "#1A1A1A", // سیاه مات
-        secondary: "#F3F4F6", // خاکستری روشن
-        accent: "#F97316", // نارنجی روشن
-        "navy-blue": "#1E3A8A", // آبی سیر
-        "bright-red": "#DC2626", // قرمز روشن
-        "dark-green": "#14532D", // سبز تیره
-        "dark-gray": "#374151", // خاکستری تیره
+        primary: {
+          DEFAULT: "#1E3A8A", // آبی سیر
+          light: "#3B82F6",
+          dark: "#1E40AF",
+        },
+        secondary: {
+          DEFAULT: "#F3F4F6", // خاکستری روشن
+          light: "#F9FAFB",
+          dark: "#E5E7EB",
+        },
+        accent: {
+          DEFAULT: "#F97316", // نارنجی روشن
+          light: "#FB923C",
+          dark: "#EA580C",
+        },
+        neutral: {
+          DEFAULT: "#374151", // خاکستری تیره
+          light: "#6B7280",
+          dark: "#1F2937",
+        },
+        success: "#10B981", // سبز
+        error: "#EF4444", // قرمز
       },
       fontFamily: {
-        sans: ["Vazir", "sans-serif"], // فونت فارسی Vazir
+        sans: [
+          "IRANSans",
+          "Vazirmatn",
+          "Vazir",
+          "Tahoma",
+          "Arial",
+          "sans-serif",
+        ],
+        display: [
+          "IRANSans",
+          "Vazirmatn",
+          "Vazir",
+          "Tahoma",
+          "Arial",
+          "sans-serif",
+        ],
+        body: [
+          "IRANSans",
+          "Vazirmatn",
+          "Vazir",
+          "Tahoma",
+          "Arial",
+          "sans-serif",
+        ],
+      },
+      fontSize: {
+        xs: ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.025em" }],
+        sm: ["0.875rem", { lineHeight: "1.25rem", letterSpacing: "0.025em" }],
+        base: ["0.9375rem", { lineHeight: "1.5rem", letterSpacing: "0.025em" }],
+        lg: ["1.0625rem", { lineHeight: "1.75rem", letterSpacing: "0.025em" }],
+        xl: ["1.25rem", { lineHeight: "1.75rem", letterSpacing: "0.025em" }],
+        "2xl": ["1.5rem", { lineHeight: "2rem", letterSpacing: "0.025em" }],
+        "3xl": [
+          "1.875rem",
+          { lineHeight: "2.25rem", letterSpacing: "0.025em" },
+        ],
+        "4xl": ["2.25rem", { lineHeight: "2.5rem", letterSpacing: "0.025em" }],
+      },
+      fontWeight: {
+        thin: "100",
+        extralight: "200",
+        light: "300",
+        normal: "400",
+        medium: "500",
+        semibold: "600",
+        bold: "700",
+        extrabold: "800",
+        black: "900",
+      },
+      transitionDuration: {
+        200: "200ms",
+        300: "300ms",
+        400: "400ms",
       },
     },
   },
