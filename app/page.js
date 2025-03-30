@@ -16,16 +16,6 @@ export default function Home() {
 
       {/* بخش‌های مختلف صفحه */}
       <main className="container mx-auto px-4">
-        {/* بخش هدر */}
-        <header className="text-center py-12 font-sans">
-          <h1 className="text-4xl font-bold leading-tight text-accent">
-            به فروشگاه سوکت امید الکترونیک عزیزخانی خوش آمدید
-          </h1>
-          <p className="text-lg mt-4 leading-relaxed ">
-            تولید کننده و تامین کننده انواع سوکت الکترونیک و لوازم برقی،
-            لامپ‌های ال‌ای‌دی ، هدلایت و فیوزهای کارتی
-          </p>
-        </header>
         <Main />
         {/* بخش‌های دیگر */}
         <section id="products" className="py-12">
