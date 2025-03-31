@@ -4,7 +4,7 @@ import { ShoppingCart, User, Search } from "lucide-react";
 const HeaderComponent = () => {
   return (
     <header
-      className="sticky z-10 top-0 bg-white/95 backdrop-blur-sm shadow-sm border-b border-secondary-dark/10"
+      className="sticky z-10 top-0 bg-white/80 backdrop-blur-md shadow-md border-b border-secondary-dark/5"
       dir="rtl"
     >
       <div className="flex justify-between items-center p-4 max-w-7xl mx-auto">
