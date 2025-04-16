@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import SliderComponent from "./sliderComponent";
@@ -11,7 +12,7 @@ import usb1 from "@/app/public/images/usb3.png";
 import usb2 from "@/app/public/images/usb2.jpg";
 import usb3 from "@/app/public/images/usb3.png";
 
-const ProductsComponent = () => {
+const Products = () => {
   const featuredProducts = [
     {
       id: 1,
@@ -48,70 +49,84 @@ const ProductsComponent = () => {
 
   const features = [
     {
-      icon: <Zap className="w-5 h-5" />,
+      icon: <Zap className="w-4 h-4 sm:w-5 sm:h-5" />,
       title: "کیفیت برتر",
       description: "استانداردهای بین‌المللی",
     },
     {
-      icon: <Shield className="w-5 h-5" />,
+      icon: <Shield className="w-4 h-4 sm:w-5 sm:h-5" />,
       title: "گارانتی معتبر",
       description: "۲ سال گارانتی",
     },
     {
-      icon: <Truck className="w-5 h-5" />,
+      icon: <Truck className="w-4 h-4 sm:w-5 sm:h-5" />,
       title: "ارسال سریع",
       description: "ارسال در کمتر از ۲۴ ساعت",
     },
     {
-      icon: <Clock className="w-5 h-5" />,
+      icon: <Clock className="w-4 h-4 sm:w-5 sm:h-5" />,
       title: "پشتیبانی ۲۴/۷",
       description: "همیشه در خدمت شما",
     },
   ];
 
   return (
-    <div id="products" className="bg-neutral-50">
+    <div dir="rtl" className="w-full bg-neutral-50">
       {/* Header Section */}
-      <HeaderComponent />
+      {/* <HeaderComponent /> */}
 
       {/* Hero Slider */}
-      <div className="container mx-auto px-4 py-12">
-        <SliderComponent />
-      </div>
+      <section className="w-full py-6 sm:py-8 md:py-10 lg:py-12">
+        <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+          <SliderComponent />
+        </div>
+      </section>
 
       {/* Features Section */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-white">
+        <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="group flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-neutral-100 hover:border-primary/20 transition-all duration-300 shadow-sm hover:shadow-md"
+                className="group bg-white rounded-xl border border-neutral-100 hover:border-primary/20 transition-all duration-300 p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-md"
               >
-                <div className="mb-4 p-3 rounded-xl bg-primary/5 text-primary group-hover:bg-primary/10 transition-colors duration-300">
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-lg bg-primary/5 text-primary group-hover:bg-primary/10 transition-colors duration-300 w-fit">
                   {feature.icon}
                 </div>
-                <h3 className="font-bold text-lg mb-2 text-neutral-800">
+                <h3 className="font-bold text-base sm:text-lg md:text-xl mb-2 sm:mb-3 text-neutral-800">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-neutral-600 leading-relaxed">
+                <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
                   {feature.description}
                 </p>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Categories Section */}
-      <div className="container mx-auto px-4 py-16">
-        <CategoryProductComponent categories={categories} />
-      </div>
+      <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16">
+        <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-neutral-800">
+            دسته‌بندی محصولات
+          </h2>
+          <CategoryProductComponent categories={categories} />
+        </div>
+      </section>
 
       {/* Featured Products */}
-      <SpecialProductComponent products={featuredProducts} />
+      <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-white">
+        <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-neutral-800">
+            محصولات ویژه
+          </h2>
+          <SpecialProductComponent products={featuredProducts} />
+        </div>
+      </section>
     </div>
   );
 };
 
-export default ProductsComponent;
+export default Products;

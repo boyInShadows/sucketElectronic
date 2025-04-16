@@ -53,6 +53,14 @@ const config = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: "320px", // Extra small devices
+        sm: "480px", // Small devices
+        md: "768px", // Medium devices
+        lg: "1024px", // Large devices
+        xl: "1280px", // Extra large devices
+        "2xl": "1536px", // 2X Extra large devices
+      },
       colors: {
         primary: {
           DEFAULT: "#1E3A8A", // آبی سیر
@@ -127,14 +135,59 @@ const config = {
         extrabold: "800",
         black: "900",
       },
+      spacing: {
+        4.5: "1.125rem",
+        5.5: "1.375rem",
+        6.5: "1.625rem",
+        7.5: "1.875rem",
+        8.5: "2.125rem",
+        9.5: "2.375rem",
+        10.5: "2.625rem",
+        11.5: "2.875rem",
+        12.5: "3.125rem",
+        13: "3.25rem",
+        14: "3.5rem",
+        15: "3.75rem",
+        16: "4rem",
+        17: "4.25rem",
+        18: "4.5rem",
+        19: "4.75rem",
+        20: "5rem",
+      },
+      borderRadius: {
+        "4xl": "2rem",
+        "5xl": "2.5rem",
+        "6xl": "3rem",
+      },
       transitionDuration: {
         200: "200ms",
         300: "300ms",
         400: "400ms",
+        500: "500ms",
+        600: "600ms",
+        700: "700ms",
+        800: "800ms",
+        900: "900ms",
+        1000: "1000ms",
+      },
+      transitionTimingFunction: {
+        "in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",
+        "out-expo": "cubic-bezier(0.19, 1, 0.22, 1)",
+        "in-out-expo": "cubic-bezier(1, 0, 0, 1)",
+      },
+      zIndex: {
+        60: "60",
+        70: "70",
+        80: "80",
+        90: "90",
+        100: "100",
       },
     },
   },
-  plugins: [rtl], // افزونه RTL
+  plugins: [rtl],
+  corePlugins: {
+    preflight: true,
+  },
 };
 
 export default config;

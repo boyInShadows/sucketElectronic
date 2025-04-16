@@ -7,28 +7,24 @@ const CommonQuestionsComponent = () => {
 
   const questions = [
     {
-      id: 1,
-      question: "چگونه محصولات را برگشت بزنیم؟",
+      question: "چگونه می‌توانم محصولات را برگردانم؟",
       answer:
-        "برای برگشت محصولات، لطفاً با پشتیبانی ما تماس بگیرید. تیم پشتیبانی ما در اسرع وقت پاسخگوی شما خواهد بود.",
+        "شما می‌توانید محصولات را تا ۷ روز پس از دریافت، بدون هیچ دلیل خاصی برگردانید. برای این کار، لطفاً با پشتیبانی ما تماس بگیرید.",
     },
     {
-      id: 2,
       question: "زمان تحویل محصولات چقدر است؟",
       answer:
-        "زمان تحویل معمولاً بین 2 تا 5 روز کاری است. در صورت نیاز به تحویل فوری، لطفاً با ما تماس بگیرید.",
+        "زمان تحویل بستگی به محل سکونت شما دارد. در شهرهای بزرگ معمولاً ۲ تا ۳ روز کاری و در شهرهای دیگر ۳ تا ۵ روز کاری طول می‌کشد.",
     },
     {
-      id: 3,
       question: "آیا محصولات گارانتی دارند؟",
       answer:
-        "بله، تمام محصولات ما دارای گارانتی 2 ساله هستند. برای اطلاعات بیشتر به بخش گارانتی مراجعه کنید.",
+        "بله، تمام محصولات ما دارای گارانتی ۱۲ ماهه هستند. در صورت بروز هرگونه مشکل، می‌توانید از خدمات گارانتی استفاده کنید.",
     },
     {
-      id: 4,
       question: "روش‌های پرداخت کدامند؟",
       answer:
-        "ما از تمامی کارت‌های بانکی، پرداخت آنلاین و پرداخت در محل پشتیبانی می‌کنیم.",
+        "ما از روش‌های پرداخت متنوعی پشتیبانی می‌کنیم، شامل پرداخت آنلاین، پرداخت در محل و انتقال بانکی.",
     },
   ];
 
@@ -37,34 +33,34 @@ const CommonQuestionsComponent = () => {
   };
 
   return (
-    <section id="faq" className="bg-neutral-50">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-12 text-neutral-800">
+    <section className="bg-white">
+      <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12 lg:py-16">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-neutral-800">
             سوالات متداول
           </h2>
-          <div className="max-w-2xl mx-auto space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {questions.map((item, index) => (
               <div
-                key={item.id}
-                className="group bg-white rounded-2xl border border-neutral-100 hover:border-primary/20 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-md"
+                key={index}
+                className="border border-neutral-200 rounded-xl overflow-hidden"
               >
                 <button
                   onClick={() => toggleQuestion(index)}
-                  className="w-full p-6 flex items-center justify-between text-right"
+                  className="w-full flex items-center justify-between p-4 sm:p-5 text-right bg-neutral-50 hover:bg-neutral-100 transition-colors duration-300"
                 >
-                  <h3 className="font-bold text-lg text-neutral-800 group-hover:text-primary transition-colors duration-300">
+                  <span className="text-sm sm:text-base font-medium text-neutral-800">
                     {item.question}
-                  </h3>
+                  </span>
                   {openIndex === index ? (
-                    <ChevronUp className="w-5 h-5 text-neutral-500" />
+                    <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-600" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-neutral-500" />
+                    <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-neutral-600" />
                   )}
                 </button>
                 {openIndex === index && (
-                  <div className="px-6 pb-6">
-                    <p className="text-sm text-neutral-600 leading-relaxed">
+                  <div className="p-4 sm:p-5 bg-white">
+                    <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
                       {item.answer}
                     </p>
                   </div>

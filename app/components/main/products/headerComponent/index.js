@@ -1,31 +1,74 @@
 "use client";
 import React from "react";
+import Link from "next/link";
+import { Search, ShoppingCart, Menu } from "lucide-react";
 
 const HeaderComponent = () => {
   return (
-    <header className="relative py-16 my-16 bg-white rounded-lg">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Decorative Line */}
-          <div className="w-20 h-1 bg-primary mx-auto mb-6 rounded-full" />
-
-          {/* Main Heading */}
-          <div className="w-full overflow-hidden">
-            <h1 className="text-2xl md:text-3xl font-bold text-primary mb-4 font-display leading-tight inline-block">
-              به فروشگاه سوکت امید الکترونیک عزیزخانی خوش آمدید
-            </h1>
+    <header dir="rtl" className="w-full bg-white border-b border-neutral-100">
+      <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link
+              href="/"
+              className="text-xl sm:text-2xl font-bold text-primary"
+            >
+              عزیزخانی
+            </Link>
           </div>
 
-          {/* Description */}
-          <div className="relative">
-            <p className="text-base md:text-lg text-neutral font-body leading-relaxed max-w-2xl mx-auto">
-              تولید کننده و تامین کننده انواع سوکت الکترونیک و لوازم برقی،
-              لامپ‌های ال‌ای‌دی ، هدلایت و فیوزهای کارتی
-            </p>
+          {/* Navigation - Desktop */}
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+            <Link
+              href="/"
+              className="text-sm lg:text-base font-medium text-neutral-800 hover:text-primary transition-colors duration-300"
+            >
+              خانه
+            </Link>
+            <Link
+              href="/products"
+              className="text-sm lg:text-base font-medium text-neutral-800 hover:text-primary transition-colors duration-300"
+            >
+              محصولات
+            </Link>
+            <Link
+              href="/blog"
+              className="text-sm lg:text-base font-medium text-neutral-800 hover:text-primary transition-colors duration-300"
+            >
+              وبلاگ
+            </Link>
+            <Link
+              href="/contact"
+              className="text-sm lg:text-base font-medium text-neutral-800 hover:text-primary transition-colors duration-300"
+            >
+              تماس با ما
+            </Link>
+          </nav>
+
+          {/* Search and Cart - Desktop */}
+          <div className="hidden md:flex items-center gap-4 lg:gap-6">
+            <button
+              className="p-2 text-neutral-600 hover:text-primary transition-colors duration-300"
+              aria-label="جستجو"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+            <button
+              className="p-2 text-neutral-600 hover:text-primary transition-colors duration-300"
+              aria-label="سبد خرید"
+            >
+              <ShoppingCart className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Bottom Line */}
-          <div className="w-32 h-0.5 bg-primary/20 mx-auto mt-6 rounded-full" />
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 text-neutral-600 hover:text-primary transition-colors duration-300"
+            aria-label="منو"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
         </div>
       </div>
     </header>

@@ -7,35 +7,45 @@ import img1 from "@/app/public/images/img1.jpg";
 import img2 from "@/app/public/images/img2.jpg";
 import img3 from "@/app/public/images/img3.jpg";
 import img4 from "@/app/public/images/img4.jpg";
+import img5 from "@/app/public/images/img5.jpg";
 
 const slides = [
   {
     id: 1,
     src: img1,
-    title: "طراحی مدرن",
-    topic: "لوازم الکترونیکی",
-    description: "مجموعه‌ای از بهترین محصولات الکترونیکی با قیمت مناسب",
+    title: "تخصصی‌ترین سوکت‌های الکترونیک خودرو با کیفیت و تضمین قیمت",
+    topic: "کیفیت",
+    description:
+      "امید الکترونیک: ارائه‌دهنده برترین برندهای داخلی و خارجی برای تمامی مدل‌های ماشین",
   },
   {
     id: 2,
     src: img2,
-    title: "تکنولوژی روز",
-    topic: "گوشی موبایل",
-    description: "جدیدترین مدل‌های گوشی موبایل با گارانتی معتبر",
+    title: "سوکت‌های اورجینال، نصب مطمئن، طول عمر بالا",
+    topic: "اصالت",
+    description:
+      "با اعتماد به امید الکترونیک عزیز خانی، قطعات را هوشمندانه انتخاب کنید!",
   },
   {
     id: 3,
     src: img3,
-    title: "کیفیت برتر",
-    topic: "لوازم خانگی",
-    description: "لوازم خانگی با کیفیت عالی و قیمت مناسب",
+    title: "پخش عمده و تکی سوکت خودرو – مشاوره رایگان قبل از خرید",
+    topic: "تنوع",
+    description: "تنوع بی‌نظیر، قیمت رقابتی، خدمات پس از فروش حرفه‌ای",
   },
   {
     id: 4,
     src: img4,
-    title: "خدمات ویژه",
-    topic: "پشتیبانی ۲۴/۷",
-    description: "پشتیبانی شبانه‌روزی برای رضایت شما",
+    title: "مرکز تخصصی سوکت و کانکتورهای الکترونیک خودرو",
+    topic: "تخصص",
+    description: "از پروژه‌های سفارشی تا قطعات استاندارد، همراه شما هستیم.",
+  },
+  {
+    id: 5,
+    src: img5,
+    title: "امید الکترونیک: اتصالی مطمئن برای سیستم برق خودروی شما",
+    topic: "اتصال",
+    description: "با ده‌ها سال تجربه، ضامن کیفیت و دوام قطعات.",
   },
 ];
 
@@ -86,24 +96,27 @@ export default function ProductSlider() {
                 style={{ objectFit: "cover" }}
                 className="absolute inset-0"
               />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 bg-black/70" />
+
               {/* Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-l from-black/70 via-black/50 to-transparent" />
 
               {/* Content */}
-              <div className="relative h-full flex items-center justify-end px-8 md:px-16 lg:px-24">
+              <div className="relative h-full flex items-center justify-start px-8 md:px-16 lg:px-24">
                 <motion.div
-                  className="max-w-2xl text-white text-right"
+                  className="max-w-3xl text-white text-right"
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
                 >
-                  <span className="inline-block px-4 py-1 bg-accent/90 text-white rounded-full text-sm font-medium mb-4">
+                  <span className="inline-block px-4 py-1.5 bg-accent/90 text-white rounded-full text-sm font-medium mb-4">
                     {slide.topic}
                   </span>
-                  <h2 className="text-4xl md:text-5xl font-bold mb-4 font-display">
+                  <h2 className="text-2xl sm:text-3xl md:text-2xl font-bold mb-4 font-display leading-tight">
                     {slide.title}
                   </h2>
-                  <p className="text-lg md:text-xl text-white/90 font-body">
+                  <p className="text-base sm:text-lg md:text-lg text-white/90 font-body leading-relaxed">
                     {slide.description}
                   </p>
                 </motion.div>
@@ -115,14 +128,14 @@ export default function ProductSlider() {
 
       {/* Navigation Buttons */}
       <button
-        onClick={prevSlide}
+        onClick={nextSlide}
         className="absolute left-4 bg-white/10 backdrop-blur-sm p-3 rounded-full hover:bg-white/20 transition-all duration-300 group"
         aria-label="Previous slide"
       >
         <ChevronLeft className="text-white w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
       </button>
       <button
-        onClick={nextSlide}
+        onClick={prevSlide}
         className="absolute right-4 bg-white/10 backdrop-blur-sm p-3 rounded-full hover:bg-white/20 transition-all duration-300 group"
         aria-label="Next slide"
       >
@@ -163,6 +176,7 @@ export default function ProductSlider() {
               style={{ objectFit: "cover" }}
               className="transition-transform duration-300 hover:scale-110"
             />
+            <div className="absolute inset-0 bg-black/30" />
           </motion.button>
         ))}
       </motion.div>

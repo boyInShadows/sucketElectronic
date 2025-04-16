@@ -1,16 +1,27 @@
 import React from "react";
 import ContactUs from "./contactUs";
-import CommenQuestions from "./commonQuestions";
+import CommonQuestions from "./commonQuestions";
 import FooterPart from "./footerPart";
 
-const footerComponent = () => {
+const Footer = () => {
   return (
-    <div>
-      <ContactUs />
-      <CommenQuestions />
-      <FooterPart />
+    <div className="w-full space-y-8 md:space-y-12">
+      {/* Contact Us Section */}
+      <section className="w-full">
+        <ContactUs />
+      </section>
+
+      {/* Common Questions Section */}
+      <section className="w-full">
+        <CommonQuestions />
+      </section>
+
+      {/* Footer Part Section */}
+      <section className="w-full">
+        <FooterPart />
+      </section>
     </div>
   );
 };
 
-export default footerComponent;
+export default Footer;

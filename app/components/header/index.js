@@ -1,65 +1,140 @@
-import React from "react";
-import { ShoppingCart, User, Search } from "lucide-react";
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import { Menu, X, ShoppingCart, Search, User } from "lucide-react";
 
-const HeaderComponent = () => {
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navLinks = [
+    { name: "صفحه اصلی", href: "/" },
+    { name: "محصولات", href: "/products" },
+    { name: "درباره ما", href: "/about" },
+    { name: "تماس با ما", href: "/contact" },
+  ];
+
   return (
-    <header
-      className="sticky z-10 top-0 bg-white/80 backdrop-blur-md shadow-md border-b border-secondary-dark/5"
-      dir="rtl"
-    >
-      <div className="flex justify-between items-center p-4 max-w-7xl mx-auto">
-        {/* Logo */}
-        <div className="text-3xl font-bold text-primary hover:text-primary-light transition-colors duration-300 cursor-pointer tracking-normal font-display">
-          لوگو
+    <header className="bg-white shadow-sm sticky top-0 z-50" dir="rtl">
+      <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          {/* Logo */}
+          <Link href="/" className="flex-shrink-0">
+            <span className="text-xl sm:text-2xl font-bold text-primary">
+              امید الکترونیک
+            </span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8 lg:space-x-10">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-sm lg:text-base text-neutral-700 hover:text-primary transition-colors duration-300"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
+            <button
+              className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
+              aria-label="جستجو"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+            <button
+              className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
+              aria-label="سبد خرید"
+            >
+              <ShoppingCart className="w-5 h-5" />
+            </button>
+            <button
+              className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
+              aria-label="حساب کاربری"
+            >
+              <User className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="منو"
+          >
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </button>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative w-1/3">
-          <input
-            type="text"
-            placeholder="جستجو در محصولات..."
-            className="w-full px-4 py-2.5 border border-secondary-dark/20 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary text-right text-base font-normal placeholder:text-neutral-light/70 transition-all duration-300 font-body"
-          />
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-light/70"
-            size={20}
-          />
-        </div>
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden fixed inset-0 bg-white z-40 transform transition-transform duration-300 ease-in-out ${
+            isMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex flex-col h-full p-4">
+            <div className="flex justify-between items-center mb-8">
+              <Link
+                href="/"
+                className="text-xl font-bold text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                امید الکترونیک
+              </Link>
+              <button
+                className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="بستن منو"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
-        {/* Navigation */}
-        <nav className="hidden md:flex gap-8">
-          <a
-            href="#"
-            className="text-neutral hover:text-primary transition-colors duration-300 font-medium text-base tracking-normal font-body"
-          >
-            خانه
-          </a>
-          <a
-            href="#"
-            className="text-neutral hover:text-primary transition-colors duration-300 font-medium text-base tracking-normal font-body"
-          >
-            درباره ما
-          </a>
-          <a
-            href="#"
-            className="text-neutral hover:text-primary transition-colors duration-300 font-medium text-base tracking-normal font-body"
-          >
-            تماس با ما
-          </a>
-        </nav>
+            <nav className="flex-1 space-y-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="block text-base text-neutral-700 hover:text-primary transition-colors duration-300 py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
 
-        {/* User Actions */}
-        <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 border border-secondary-dark/20 px-4 py-2 rounded-lg hover:bg-secondary hover:border-primary/20 text-neutral font-medium text-base tracking-normal transition-all duration-300 font-body">
-            <User size={20} /> ورود | ثبت‌نام
-          </button>
-          <button className="flex items-center gap-2 bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-lg font-medium text-base tracking-normal transition-all duration-300 font-body">
-            <ShoppingCart size={20} /> سبد خرید
-          </button>
+            <div className="flex items-center justify-center space-x-6 pt-8 border-t border-neutral-200">
+              <button
+                className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
+                aria-label="جستجو"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+              <button
+                className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
+                aria-label="سبد خرید"
+              >
+                <ShoppingCart className="w-5 h-5" />
+              </button>
+              <button
+                className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
+                aria-label="حساب کاربری"
+              >
+                <User className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </header>
   );
 };
 
-export default HeaderComponent;
+export default Header;
