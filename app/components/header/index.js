@@ -3,40 +3,23 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Menu, X, ShoppingCart, Search, User } from "lucide-react";
 
+// Images
+import Logo from "@/app/public/images/Logo.png";
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { name: "صفحه اصلی", href: "/" },
-    { name: "محصولات", href: "/products" },
-    { name: "درباره ما", href: "/about" },
     { name: "تماس با ما", href: "/contact" },
+    { name: "درباره ما", href: "/about" },
+    { name: "محصولات", href: "page/products" },
+    { name: "صفحه اصلی", href: "/" },
   ];
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50" dir="rtl">
-      <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+    <header className="bg-white shadow-sm sticky top-0 z-50" dir="ltr">
+      <div className=" mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <span className="text-xl sm:text-2xl font-bold text-primary">
-              امید الکترونیک
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8 lg:space-x-10">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-sm lg:text-base text-neutral-700 hover:text-primary transition-colors duration-300"
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
-
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
             <button
@@ -51,13 +34,34 @@ const Header = () => {
             >
               <ShoppingCart className="w-5 h-5" />
             </button>
-            <button
+            <Link
+              href="page/login"
               className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
               aria-label="حساب کاربری"
             >
               <User className="w-5 h-5" />
-            </button>
+            </Link>
           </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center justify-around  lg:space-x-12">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-sm lg:text-base text-neutral-700 hover:text-primary transition-colors duration-300"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Logo */}
+          <Link href="/" className="flex-shrink-0">
+            <span className="text-xl sm:text-2xl font-bold text-primary">
+              امید الکترونیک
+            </span>
+          </Link>
 
           {/* Mobile Menu Button */}
           <button
@@ -123,12 +127,14 @@ const Header = () => {
               >
                 <ShoppingCart className="w-5 h-5" />
               </button>
-              <button
+              <Link
+                href="page/login"
                 className="p-2 text-neutral-700 hover:text-primary transition-colors duration-300"
                 aria-label="حساب کاربری"
+                onClick={() => setIsMenuOpen(false)}
               >
                 <User className="w-5 h-5" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

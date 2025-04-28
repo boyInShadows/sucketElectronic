@@ -97,7 +97,7 @@ export default function ProductSlider() {
                 className="absolute inset-0"
               />
               {/* Dark Overlay */}
-              <div className="absolute inset-0 bg-black/70" />
+              <div className="absolute inset-0 bg-black/50" />
 
               {/* Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-l from-black/70 via-black/50 to-transparent" />
@@ -113,10 +113,10 @@ export default function ProductSlider() {
                   <span className="inline-block px-4 py-1.5 bg-accent/90 text-white rounded-full text-sm font-medium mb-4">
                     {slide.topic}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl md:text-2xl font-bold mb-4 font-display leading-tight">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 font-display leading-tight">
                     {slide.title}
                   </h2>
-                  <p className="text-base sm:text-lg md:text-lg text-white/90 font-body leading-relaxed">
+                  <p className="text-base sm:text-lg md:text-xl text-white/90 font-body leading-relaxed">
                     {slide.description}
                   </p>
                 </motion.div>

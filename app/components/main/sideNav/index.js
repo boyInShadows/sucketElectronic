@@ -1,157 +1,103 @@
 "use client";
-import React from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
-  Home,
-  ShoppingCart,
-  BookOpen,
-  Phone,
-  Instagram,
-  MessageCircle,
-  MessageSquare,
-  ChevronLeft,
+  ImageIcon,
+  LayoutGrid,
   Star,
+  BookText,
+  MessageCircle,
 } from "lucide-react";
 
-const SideNav = () => {
-  const quickLinks = [
-    { icon: <Home className="w-4 h-4" />, label: "خانه", href: "/" },
-    {
-      icon: <ShoppingCart className="w-4 h-4" />,
-      label: "محصولات",
-      href: "/products",
-    },
-    { icon: <BookOpen className="w-4 h-4" />, label: "وبلاگ", href: "/blog" },
-    {
-      icon: <Phone className="w-4 h-4" />,
-      label: "تماس با ما",
-      href: "/contact",
-    },
-  ];
+const navigationItems = [
+  {
+    id: "slider",
+    label: "اسلایدر",
+    icon: ImageIcon,
+  },
+  {
+    id: "categories",
+    label: "دسته‌بندی محصولات",
+    icon: LayoutGrid,
+  },
+  {
+    id: "featured",
+    label: "محصولات ویژه",
+    icon: Star,
+  },
+  {
+    id: "articles",
+    label: "مقالات",
+    icon: BookText,
+  },
+  {
+    id: "comments",
+    label: "نظرات مشتریان",
+    icon: MessageCircle,
+  },
+];
 
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "پریز هوشمند WiFi",
-      price: "۲۹۹,۰۰۰",
-      image: "/images/usb3.png",
-    },
-    {
-      id: 2,
-      name: "پریز USB شارژر",
-      price: "۱۹۹,۰۰۰",
-      image: "/images/usb2.jpg",
-    },
-  ];
+export default function SideNav() {
+  const [activeSection, setActiveSection] = useState("slider");
+  const [isVisible, setIsVisible] = useState(true);
 
-  const socialLinks = [
-    { icon: <Instagram className="w-4 h-4" />, label: "اینستاگرام", href: "#" },
-    { icon: <MessageCircle className="w-4 h-4" />, label: "تلگرام", href: "#" },
-    { icon: <MessageSquare className="w-4 h-4" />, label: "واتساپ", href: "#" },
-  ];
+  const handleScroll = () => {
+    const sections = navigationItems.map((item) => item.id);
+    const scrollPosition = window.scrollY + 100;
+
+    for (const section of sections) {
+      const element = document.getElementById(section);
+      if (element) {
+        const { offsetTop, offsetHeight } = element;
+        if (
+          scrollPosition >= offsetTop &&
+          scrollPosition < offsetTop + offsetHeight
+        ) {
+          setActiveSection(section);
+          break;
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 80,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
-    <div
-      dir="rtl"
-      className="hidden lg:block w-64 bg-white border-r border-neutral-100 h-screen sticky top-0"
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      className="fixed right-8 top-1/3 -translate-y-1/2 z-50 hidden lg:block"
     >
-      <div className="h-full flex flex-col justify-between p-4">
-        <div>
-          {/* Quick Links */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-neutral-500 mb-3">
-              دسترسی سریع
-            </h3>
-            <div className="space-y-1.5">
-              {quickLinks.map((link, index) => (
-                <Link
-                  key={index}
-                  href={link.href}
-                  className="flex items-center gap-2 p-2 rounded-lg text-neutral-700 hover:bg-primary/5 hover:text-primary transition-colors duration-300"
-                >
-                  {link.icon}
-                  <span className="text-sm">{link.label}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Featured Products */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-neutral-500 mb-3">
-              محصولات ویژه
-            </h3>
-            <div className="space-y-3">
-              {featuredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="group bg-neutral-50 rounded-lg p-2 hover:bg-primary/5 transition-colors duration-300"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-300"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-medium text-neutral-800 group-hover:text-primary transition-colors duration-300">
-                        {product.name}
-                      </h4>
-                      <p className="text-xs text-primary font-medium">
-                        {product.price} تومان
-                      </p>
-                    </div>
-                    <Star className="w-3.5 h-3.5 text-yellow-400" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div>
-          {/* Contact Info */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-neutral-500 mb-3">
-              اطلاعات تماس
-            </h3>
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 text-sm text-neutral-700">
-                <Phone className="w-3.5 h-3.5 text-primary" />
-                <span>۰۲۱-۱۲۳۴۵۶۷۸</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-neutral-700">
-                <MessageSquare className="w-3.5 h-3.5 text-primary" />
-                <span>info@example.com</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Media */}
-          <div>
-            <h3 className="text-sm font-medium text-neutral-500 mb-3">
-              شبکه‌های اجتماعی
-            </h3>
-            <div className="flex items-center gap-2">
-              {socialLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  className="p-1.5 rounded-lg bg-neutral-50 text-neutral-700 hover:bg-primary/5 hover:text-primary transition-colors duration-300"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link.icon}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col items-center gap-6">
+        {navigationItems.map((item) => (
+          <motion.button
+            key={item.id}
+            onClick={() => scrollToSection(item.id)}
+            className={`relative group p-2 rounded-full transition-all duration-300 ${
+              activeSection === item.id
+                ? "text-accent"
+                : "text-neutral-400 hover:text-accent"
+            }`}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <item.icon className="w-6 h-6" />
+          </motion.button>
+        ))}
       </div>
-    </div>
+    </motion.div>
   );
-};
-
-export default SideNav;
+}

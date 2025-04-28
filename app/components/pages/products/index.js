@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import CategoryAccordion from "./categoryAccordion";
-import { Search } from "lucide-react";
+import { Search, Plus } from "lucide-react";
+import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 
 // Sample data - Replace with your actual data
 const categories = [
@@ -67,7 +68,43 @@ const categories = [
   },
 ];
 
+const CategoryCard = ({ category }) => {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
+    >
+      <h3 className="text-xl font-semibold text-neutral-800 mb-4">
+        {category.name}
+      </h3>
+      <div className="grid grid-cols-2 gap-4">
+        {category.products.slice(0, 2).map((product) => (
+          <div key={product.id} className="flex flex-col items-center">
+            <div className="w-24 h-24 bg-neutral-100 rounded-xl mb-2 flex items-center justify-center">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-16 h-16 object-contain"
+              />
+            </div>
+            <span className="text-sm text-neutral-600 text-center">
+              {product.name}
+            </span>
+            <span className="text-sm font-medium text-accent mt-1">
+              {product.price} تومان
+            </span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
 const ProductsPage = () => {
+  const { data: session } = useSession();
+  const isAdmin =
+    session?.user?.role === "super_admin" || session?.user?.role === "ramtin";
   return (
     <div dir="rtl" className="min-h-screen bg-neutral-50">
       {/* Header */}
@@ -91,14 +128,25 @@ const ProductsPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12">
-        <div className="grid gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <CategoryAccordion
-              key={category.id}
-              category={category}
-              products={category.products}
-            />
+            <CategoryCard key={category.id} category={category} />
           ))}
+          {/* Add New Category Button - Only visible to super admins */}
+          {isAdmin && (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-neutral-200 hover:border-accent group"
+            >
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors duration-300">
+                <Plus className="w-6 h-6 text-accent" />
+              </div>
+              <span className="text-neutral-600 font-medium">
+                افزودن دسته‌بندی جدید
+              </span>
+            </motion.button>
+          )}
         </div>
       </div>
     </div>

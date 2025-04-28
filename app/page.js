@@ -15,11 +15,6 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
-      {/* Header Section */}
-      <header className="w-full">
-        <Header />
-      </header>
-
       {/* Main Content Section */}
       <main className="flex-1 w-full">
         <div className=" mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
@@ -29,7 +24,7 @@ export default function Home() {
 
       {/* Footer Section */}
       <footer className="w-full">
-        <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className=" mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
           <Footer />
         </div>
       </footer>
