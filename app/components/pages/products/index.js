@@ -1,72 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
-
-// Sample data - Replace with your actual data
-const categories = [
-  {
-    id: 1,
-    name: "پریز هوشمند",
-    products: [
-      {
-        id: 1,
-        name: "پریز هوشمند WiFi",
-        price: "۲۹۹,۰۰۰",
-        image: "/images/usb3.png",
-        category: "پریز هوشمند",
-      },
-      {
-        id: 2,
-        name: "پریز هوشمند بلوتوث",
-        price: "۳۵۹,۰۰۰",
-        image: "/images/usb2.jpg",
-        category: "پریز هوشمند",
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "پریز USB",
-    products: [
-      {
-        id: 3,
-        name: "پریز USB شارژر",
-        price: "۱۹۹,۰۰۰",
-        image: "/images/usb3.png",
-        category: "پریز USB",
-      },
-      {
-        id: 4,
-        name: "پریز USB سریع",
-        price: "۲۴۹,۰۰۰",
-        image: "/images/usb2.jpg",
-        category: "پریز USB",
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "پریز ضد آب",
-    products: [
-      {
-        id: 5,
-        name: "پریز زمینی ضد آب",
-        price: "۲۴۹,۰۰۰",
-        image: "/images/usb3.png",
-        category: "پریز ضد آب",
-      },
-      {
-        id: 6,
-        name: "پریز دیواری ضد آب",
-        price: "۲۷۹,۰۰۰",
-        image: "/images/usb2.jpg",
-        category: "پریز ضد آب",
-      },
-    ],
-  },
-];
 
 const CategoryCard = ({ category }) => {
   return (
@@ -79,7 +15,7 @@ const CategoryCard = ({ category }) => {
         {category.name}
       </h3>
       <div className="grid grid-cols-2 gap-4">
-        {category.products.slice(0, 2).map((product) => (
+        {category.products?.slice(0, 2).map((product) => (
           <div key={product.id} className="flex flex-col items-center">
             <div className="w-24 h-24 bg-neutral-100 rounded-xl mb-2 flex items-center justify-center">
               <img
@@ -103,8 +39,65 @@ const CategoryCard = ({ category }) => {
 
 const ProductsPage = () => {
   const { data: session } = useSession();
-  const isAdmin =
-    session?.user?.role === "super_admin" || session?.user?.role === "ramtin";
+  const isAdmin = localStorage.getItem("is_admin") === "true";
+  const [categories, setCategories] = useState([]);
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState({ name: "" });
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:8000/api/categories/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("خطا در دریافت دسته‌بندی‌ها");
+      }
+
+      const data = await response.json();
+      setCategories(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:8000/api/categories/", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCategory),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "خطا در ایجاد دسته‌بندی");
+      }
+
+      const data = await response.json();
+      setCategories([...categories, data]);
+      setShowAddCategory(false);
+      setNewCategory({ name: "" });
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div dir="rtl" className="min-h-screen bg-neutral-50">
       {/* Header */}
@@ -132,11 +125,12 @@ const ProductsPage = () => {
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}
-          {/* Add New Category Button - Only visible to super admins */}
+          {/* Add New Category Button - Only visible to superusers */}
           {isAdmin && (
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={() => setShowAddCategory(true)}
               className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-neutral-200 hover:border-accent group"
             >
               <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors duration-300">
@@ -149,6 +143,52 @@ const ProductsPage = () => {
           )}
         </div>
       </div>
+
+      {/* Add Category Modal */}
+      {showAddCategory && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-md w-full text-right">
+            <h3 className="text-lg font-semibold mb-4 text-neutral-800">
+              افزودن دسته‌بندی جدید
+            </h3>
+            <form onSubmit={handleAddCategory}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  نام دسته‌بندی
+                </label>
+                <input
+                  type="text"
+                  value={newCategory.name}
+                  onChange={(e) => setNewCategory({ name: e.target.value })}
+                  className="w-full px-4 py-2 rounded-lg border border-neutral-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                  placeholder="نام دسته‌بندی را وارد کنید"
+                  required
+                />
+              </div>
+              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAddCategory(false);
+                    setNewCategory({ name: "" });
+                    setError("");
+                  }}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  انصراف
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+                >
+                  ایجاد دسته‌بندی
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

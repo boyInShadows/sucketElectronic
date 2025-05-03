@@ -12,16 +12,16 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
-  const [isSuperuser, setIsSuperuser] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Get username and superuser status from localStorage
+    // Get username and admin status from localStorage
     const storedUsername = localStorage.getItem("username");
-    const storedIsSuperuser = localStorage.getItem("is_superuser");
+    const storedIsAdmin = localStorage.getItem("is_admin");
 
     if (storedUsername) {
       setUsername(storedUsername);
-      setIsSuperuser(storedIsSuperuser === "true");
+      setIsAdmin(storedIsAdmin === "true");
     }
   }, []);
 
@@ -29,9 +29,9 @@ const Header = () => {
     // Clear user data from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-    localStorage.removeItem("is_superuser");
+    localStorage.removeItem("is_admin");
     setUsername("");
-    setIsSuperuser(false);
+    setIsAdmin(false);
     setShowLogoutPopup(false);
     router.push("/login");
   };
@@ -43,9 +43,9 @@ const Header = () => {
     { name: "صفحه اصلی", href: "/" },
   ];
 
-  // Add users link if logged in and is superuser
+  // Add users link if logged in and is admin
   const allNavLinks =
-    username && isSuperuser
+    username && isAdmin
       ? [...navLinks, { name: "مدیریت کاربران", href: "/users" }]
       : navLinks;
 

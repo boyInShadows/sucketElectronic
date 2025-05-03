@@ -19,9 +19,9 @@ export default function ClientLayout({ children }) {
   // Handle users page access
   if (pathname === "/users") {
     const token = localStorage.getItem("token");
-    const isSuperuser = localStorage.getItem("is_superuser") === "true";
+    const isAdmin = localStorage.getItem("is_admin") === "true";
 
-    if (!token || !isSuperuser) {
+    if (!token || !isAdmin) {
       window.location.href = "/";
       return null;
     }

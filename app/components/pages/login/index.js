@@ -32,9 +32,9 @@ const Login = () => {
       localStorage.setItem("token", response.access);
       localStorage.setItem("username", formData.username);
 
-      // Get is_superuser from the user object in the response
-      const isSuperuser = response.user?.is_superuser || false;
-      localStorage.setItem("is_superuser", isSuperuser);
+      // Get is_admin from the user object in the response
+      const isAdmin = response.user?.is_admin || false;
+      localStorage.setItem("is_admin", isAdmin);
 
       // Show welcome popup
       setShowWelcomePopup(true);

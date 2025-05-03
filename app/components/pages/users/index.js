@@ -20,12 +20,12 @@ const Users = () => {
       try {
         // Get authentication data from localStorage
         const token = localStorage.getItem("token");
-        const isSuperuser = localStorage.getItem("is_superuser");
+        const isAdmin = localStorage.getItem("is_admin") === "true";
 
         // Debug information
         console.log("=== Frontend Debug ===");
         console.log("Token:", token);
-        console.log("isSuperuser:", isSuperuser);
+        console.log("isAdmin:", isAdmin);
         console.log("=====================");
 
         // Check if user is logged in
@@ -35,8 +35,8 @@ const Users = () => {
           return;
         }
 
-        // Check if user is superuser
-        if (isSuperuser !== "true") {
+        // Check if user is admin
+        if (!isAdmin) {
           setError(
             "شما دسترسی لازم برای مشاهده این صفحه را ندارید. لطفا با یک حساب مدیر کل وارد شوید."
           );
@@ -205,7 +205,7 @@ const Users = () => {
                       ? "مدیر"
                       : "کاربر"}
                   </span>
-                  {!user.is_superuser && (
+                  {user.is_admin && (
                     <button
                       onClick={() => handleDeleteClick(user)}
                       className="p-2 text-red-500 hover:text-red-600 transition-colors"
