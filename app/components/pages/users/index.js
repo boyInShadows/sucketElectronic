@@ -205,7 +205,7 @@ const Users = () => {
                       ? "مدیر"
                       : "کاربر"}
                   </span>
-                  {user.is_admin && (
+                  {!user.is_admin && (
                     <button
                       onClick={() => handleDeleteClick(user)}
                       className="p-2 text-red-500 hover:text-red-600 transition-colors"

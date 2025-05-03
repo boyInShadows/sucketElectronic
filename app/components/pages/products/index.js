@@ -3,37 +3,86 @@ import React, { useState, useEffect } from "react";
 import { Search, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
-const CategoryCard = ({ category }) => {
+const CategoryCard = ({ category, onDelete }) => {
+  const isAdmin = localStorage.getItem("is_admin") === "true";
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  if (!category?.slug) {
+    return null;
+  }
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!window.confirm("آیا از حذف این دسته‌بندی اطمینان دارید؟")) {
+      return;
+    }
+
+    try {
+      setIsDeleting(true);
+      await onDelete(category.id);
+    } catch (error) {
+      console.error("Error deleting category:", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
-    >
-      <h3 className="text-xl font-semibold text-neutral-800 mb-4">
-        {category.name}
-      </h3>
-      <div className="grid grid-cols-2 gap-4">
-        {category.products?.slice(0, 2).map((product) => (
-          <div key={product.id} className="flex flex-col items-center">
-            <div className="w-24 h-24 bg-neutral-100 rounded-xl mb-2 flex items-center justify-center">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-16 h-16 object-contain"
+    <Link href={`/products/${encodeURIComponent(category.slug)}`}>
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer relative"
+      >
+        {isAdmin && (
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="absolute top-2 left-2 p-2 text-red-500 hover:text-red-700 disabled:opacity-50"
+            title="حذف دسته‌بندی"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clipRule="evenodd"
               />
+            </svg>
+          </button>
+        )}
+        <h3 className="text-xl font-semibold text-neutral-800 mb-4">
+          {category.name}
+        </h3>
+        <div className="grid grid-cols-2 gap-4">
+          {category.products?.slice(0, 2).map((product) => (
+            <div key={product.id} className="flex flex-col items-center">
+              <div className="w-24 h-24 bg-neutral-100 rounded-xl mb-2 flex items-center justify-center">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-16 h-16 object-contain"
+                />
+              </div>
+              <span className="text-sm text-neutral-600 text-center">
+                {product.name}
+              </span>
+              <span className="text-sm font-medium text-accent mt-1">
+                {product.price} تومان
+              </span>
             </div>
-            <span className="text-sm text-neutral-600 text-center">
-              {product.name}
-            </span>
-            <span className="text-sm font-medium text-accent mt-1">
-              {product.price} تومان
-            </span>
-          </div>
-        ))}
-      </div>
-    </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </Link>
   );
 };
 
@@ -70,10 +119,41 @@ const ProductsPage = () => {
     }
   };
 
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:8000/api/categories/${categoryId}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "خطا در حذف دسته‌بندی");
+      }
+
+      // Remove the deleted category from the state
+      setCategories(
+        categories.filter((category) => category.id !== categoryId)
+      );
+    } catch (err) {
+      console.error("Error deleting category:", err);
+      setError(err.message);
+    }
+  };
+
   const handleAddCategory = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
+      console.log("Creating category with data:", newCategory);
+
       const response = await fetch("http://localhost:8000/api/categories/", {
         method: "POST",
         headers: {
@@ -83,18 +163,20 @@ const ProductsPage = () => {
         body: JSON.stringify(newCategory),
       });
 
+      const data = await response.json();
+      console.log("Server response:", data);
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || "خطا در ایجاد دسته‌بندی");
+        throw new Error(data.detail || "خطا در ایجاد دسته‌بندی");
       }
 
-      const data = await response.json();
       setCategories([...categories, data]);
       setShowAddCategory(false);
       setNewCategory({ name: "" });
       setError("");
     } catch (err) {
-      setError(err.message);
+      console.error("Error creating category:", err);
+      setError(err.message || "خطا در ایجاد دسته‌بندی");
     }
   };
 
@@ -121,9 +203,18 @@ const ProductsPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12">
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
+            {error}
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+            <CategoryCard
+              key={category.id}
+              category={category}
+              onDelete={handleDeleteCategory}
+            />
           ))}
           {/* Add New Category Button - Only visible to superusers */}
           {isAdmin && (

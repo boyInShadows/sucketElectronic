@@ -47,9 +47,9 @@ const rtl = require("tailwindcss-rtl");
 */
 const config = {
   content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -184,7 +184,16 @@ const config = {
       },
     },
   },
-  plugins: [rtl],
+  plugins: [
+    rtl,
+    function ({ addBase }) {
+      addBase({
+        input: {
+          color: "rgb(38 38 38)", // This is the RGB value for text-neutral-800
+        },
+      });
+    },
+  ],
   corePlugins: {
     preflight: true,
   },
