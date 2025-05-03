@@ -49,13 +49,46 @@ export async function login(credentials) {
   return handleResponse(res);
 }
 
+export async function sendVerificationCode(data) {
+  try {
+    const res = await fetch(`${API_URL}/auth/send-verification-code/`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || "خطا در ارسال کد تایید");
+    }
+
+    const responseData = await res.json();
+    return responseData;
+  } catch (error) {
+    console.error("Verification code error:", error);
+    throw error;
+  }
+}
+
 export async function register(userData) {
-  const res = await fetch(`${API_URL}/auth/register/`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify(userData),
-  });
-  return handleResponse(res);
+  try {
+    const res = await fetch(`${API_URL}/auth/register/`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(userData),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.error || errorData.message || "خطا در ثبت نام");
+    }
+
+    const responseData = await res.json();
+    return responseData;
+  } catch (error) {
+    console.error("Registration error:", error);
+    throw error;
+  }
 }
 
 // Cart API
