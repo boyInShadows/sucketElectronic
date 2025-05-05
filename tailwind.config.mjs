@@ -191,6 +191,9 @@ const config = {
         input: {
           color: "rgb(38 38 38)", // This is the RGB value for text-neutral-800
         },
+        textarea: {
+          color: "rgb(38 38 38)", // This is the RGB value for text-neutral-800
+        },
       });
     },
   ],
