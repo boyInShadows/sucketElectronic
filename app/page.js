@@ -24,7 +24,7 @@ export default function Home() {
 
       {/* Footer Section */}
       <footer className="w-full">
-        <div className=" mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div>
           <Footer />
         </div>
       </footer>

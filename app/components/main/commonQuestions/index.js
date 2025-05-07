@@ -36,9 +36,6 @@ const CommonQuestionsComponent = () => {
     <section className="bg-white">
       <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12 lg:py-16">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-neutral-800">
-            سوالات متداول
-          </h2>
           <div className="space-y-3 sm:space-y-4">
             {questions.map((item, index) => (
               <div

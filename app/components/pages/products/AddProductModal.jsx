@@ -23,28 +23,20 @@ const AddProductModal = ({
 }) => {
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-md mx-4 relative">
-        {/* Header with close button */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-xl font-semibold text-gray-800">
-            افزودن محصول جدید
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-            aria-label="بستن"
-          >
-            <X className="w-5 h-5 text-gray-500" />
-          </button>
-        </div>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(e);
+  };
 
-        {/* Form */}
-        <form onSubmit={onSubmit} className="p-4">
-          {/* Product Name Input */}
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4 font-vazirmatn text-[#1E3A8A]">
+          افزودن محصول جدید
+        </h2>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2 text-right">
+            <label className="block text-gray-700 text-sm font-vazirmatn mb-2">
               نام محصول
             </label>
             <input
@@ -53,15 +45,13 @@ const AddProductModal = ({
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1E3A8A] font-vazirmatn"
               required
-              placeholder="نام محصول را وارد کنید"
             />
           </div>
 
-          {/* Product Description Input */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2 text-right">
+            <label className="block text-gray-700 text-sm font-vazirmatn mb-2">
               توضیحات
             </label>
             <textarea
@@ -69,16 +59,14 @@ const AddProductModal = ({
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1E3A8A] font-vazirmatn"
+              rows="3"
               required
-              placeholder="توضیحات محصول را وارد کنید"
-              rows={3}
             />
           </div>
 
-          {/* Product Price Input */}
           <div className="mb-4">
-            <label className="block text-gray-700 mb-2 text-right">
+            <label className="block text-gray-700 text-sm font-vazirmatn mb-2">
               قیمت (تومان)
             </label>
             <input
@@ -87,15 +75,13 @@ const AddProductModal = ({
               onChange={(e) =>
                 setFormData({ ...formData, price: e.target.value })
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1E3A8A] font-vazirmatn"
               required
-              placeholder="قیمت را وارد کنید"
             />
           </div>
 
-          {/* Product Image Input */}
           <div className="mb-6">
-            <label className="block text-gray-700 mb-2 text-right">
+            <label className="block text-gray-700 text-sm font-vazirmatn mb-2">
               تصویر محصول
             </label>
             <input
@@ -103,23 +89,22 @@ const AddProductModal = ({
               onChange={(e) =>
                 setFormData({ ...formData, image: e.target.files[0] })
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1E3A8A] font-vazirmatn"
               accept="image/*"
             />
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 font-vazirmatn"
             >
               انصراف
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              className="px-6 py-2 bg-[#1E3A8A] text-white rounded-lg hover:bg-[#1E3A8A]/90 transition-colors font-vazirmatn"
             >
               افزودن محصول
             </button>

@@ -182,8 +182,8 @@ const CategoryPage = ({ categorySlug }) => {
   // Loading state
   if (status === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1E3A8A]"></div>
       </div>
     );
   }
@@ -191,8 +191,8 @@ const CategoryPage = ({ categorySlug }) => {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-red-500">{error}</div>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-red-500 font-vazirmatn">{error}</div>
       </div>
     );
   }
@@ -200,8 +200,8 @@ const CategoryPage = ({ categorySlug }) => {
   // Category not found state
   if (!categoryData) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-500">Category not found</div>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-gray-500 font-vazirmatn">دسته‌بندی یافت نشد</div>
       </div>
     );
   }
@@ -217,29 +217,31 @@ const CategoryPage = ({ categorySlug }) => {
     <div className="container mx-auto px-4 py-8">
       {/* Header with Add Product button for admins */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">{categoryData.name}</h1>
+        <h1 className="text-2xl font-bold font-vazirmatn text-[#1E3A8A]">
+          {categoryData.name}
+        </h1>
         {isAdmin && (
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-[#1E3A8A] text-white px-6 py-2 rounded-lg hover:bg-[#1E3A8A]/90 transition-colors font-vazirmatn text-sm"
           >
-            Add Product
+            افزودن محصول
           </button>
         )}
       </div>
 
       {/* Products Grid */}
       {products.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-gray-500 mb-4">
-            No products found in this category.
+        <div className="text-center py-12 bg-gray-50 rounded-lg">
+          <p className="text-gray-500 mb-6 font-vazirmatn">
+            محصولی در این دسته‌بندی یافت نشد.
           </p>
           {isAdmin && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 mx-auto"
+              className="bg-[#1E3A8A] text-white px-6 py-2 rounded-lg hover:bg-[#1E3A8A]/90 transition-colors font-vazirmatn text-sm"
             >
-              Add Your First Product
+              افزودن اولین محصول
             </button>
           )}
         </div>

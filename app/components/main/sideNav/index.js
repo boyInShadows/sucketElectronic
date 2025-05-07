@@ -7,6 +7,8 @@ import {
   Star,
   BookText,
   MessageCircle,
+  Phone,
+  HelpCircle,
 } from "lucide-react";
 
 const navigationItems = [
@@ -35,41 +37,28 @@ const navigationItems = [
     label: "نظرات مشتریان",
     icon: MessageCircle,
   },
+  {
+    id: "contact-us",
+    label: "تماس با ما",
+    icon: Phone,
+  },
+  {
+    id: "common-questions",
+    label: "سوالات متداول",
+    icon: HelpCircle,
+  },
 ];
 
-export default function SideNav() {
-  const [activeSection, setActiveSection] = useState("slider");
-  const [isVisible, setIsVisible] = useState(true);
-
-  const handleScroll = () => {
-    const sections = navigationItems.map((item) => item.id);
-    const scrollPosition = window.scrollY + 100;
-
-    for (const section of sections) {
-      const element = document.getElementById(section);
-      if (element) {
-        const { offsetTop, offsetHeight } = element;
-        if (
-          scrollPosition >= offsetTop &&
-          scrollPosition < offsetTop + offsetHeight
-        ) {
-          setActiveSection(section);
-          break;
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+export default function SideNav({ activeSection, onSectionClick }) {
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.offsetTop;
+      const offsetPosition = elementPosition - headerOffset;
+
       window.scrollTo({
-        top: element.offsetTop - 80,
+        top: offsetPosition,
         behavior: "smooth",
       });
     }
@@ -88,13 +77,16 @@ export default function SideNav() {
             onClick={() => scrollToSection(item.id)}
             className={`relative group p-2 rounded-full transition-all duration-300 ${
               activeSection === item.id
-                ? "text-accent"
-                : "text-neutral-400 hover:text-accent"
+                ? "text-accent bg-accent/10"
+                : "text-neutral-400 hover:text-accent hover:bg-accent/5"
             }`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
             <item.icon className="w-6 h-6" />
+            <span className="absolute right-full mr-2 px-2 py-1 bg-neutral-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              {item.label}
+            </span>
           </motion.button>
         ))}
       </div>

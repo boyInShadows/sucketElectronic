@@ -86,43 +86,21 @@ const config = {
         error: "#EF4444", // قرمز
       },
       fontFamily: {
-        sans: [
-          "IRANSans",
-          "Vazirmatn",
-          "Vazir",
-          "Tahoma",
-          "Arial",
-          "sans-serif",
-        ],
-        display: [
-          "IRANSans",
-          "Vazirmatn",
-          "Vazir",
-          "Tahoma",
-          "Arial",
-          "sans-serif",
-        ],
-        body: [
-          "IRANSans",
-          "Vazirmatn",
-          "Vazir",
-          "Tahoma",
-          "Arial",
-          "sans-serif",
-        ],
+        sans: ["tanha"],
+        display: ["tanha"],
+        body: ["tanha"],
       },
       fontSize: {
-        xs: ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.025em" }],
-        sm: ["0.875rem", { lineHeight: "1.25rem", letterSpacing: "0.025em" }],
-        base: ["0.9375rem", { lineHeight: "1.5rem", letterSpacing: "0.025em" }],
-        lg: ["1.0625rem", { lineHeight: "1.75rem", letterSpacing: "0.025em" }],
-        xl: ["1.25rem", { lineHeight: "1.75rem", letterSpacing: "0.025em" }],
-        "2xl": ["1.5rem", { lineHeight: "2rem", letterSpacing: "0.025em" }],
-        "3xl": [
-          "1.875rem",
-          { lineHeight: "2.25rem", letterSpacing: "0.025em" },
-        ],
-        "4xl": ["2.25rem", { lineHeight: "2.5rem", letterSpacing: "0.025em" }],
+        xs: ["1rem", { lineHeight: "1.5" }], // 16px
+        sm: ["1.125rem", { lineHeight: "1.75" }], // 18px
+        base: ["1.25rem", { lineHeight: "1.75" }], // 20px
+        lg: ["1.5rem", { lineHeight: "2" }], // 24px
+        xl: ["1.75rem", { lineHeight: "2.25" }], // 28px
+        "2xl": ["2rem", { lineHeight: "2.5" }], // 32px
+        "3xl": ["2.5rem", { lineHeight: "2.75" }], // 40px
+        "4xl": ["3rem", { lineHeight: "1" }], // 48px
+        "5xl": ["3.5rem", { lineHeight: "1" }], // 56px
+        "6xl": ["4rem", { lineHeight: "1" }], // 64px
       },
       fontWeight: {
         thin: "100",
@@ -193,6 +171,26 @@ const config = {
         },
         textarea: {
           color: "rgb(38 38 38)", // This is the RGB value for text-neutral-800
+        },
+        p: {
+          fontSize: "1.5rem", // 16px
+          lineHeight: "1.75",
+          // fontFamily: "tanha",
+        },
+        span: {
+          fontSize: "1.25rem", // 16px
+          lineHeight: "1.75",
+          // fontFamily: "tanha",
+        },
+        label: {
+          fontSize: "1.5rem", // 16px
+          lineHeight: "1.75",
+          // fontFamily: "kalameh",
+        },
+        button: {
+          fontSize: "1rem", // 16px
+          fontWeight: "800",
+          // fontFamily: "tanha",
         },
       });
     },

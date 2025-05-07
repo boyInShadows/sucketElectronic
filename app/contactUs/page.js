@@ -1,5 +1,5 @@
 import React from "react";
-import ContactUsComponent from "@/app/components/footer/contactUs";
+import ContactUsComponent from "@/app/components/main/contactUs";
 
 const ContactUs = () => {
   return (

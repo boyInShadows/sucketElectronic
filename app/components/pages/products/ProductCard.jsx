@@ -13,49 +13,47 @@ import Image from "next/image";
  * @param {Function} props.onDelete - Optional callback for delete functionality
  */
 const ProductCard = ({ product, onDelete }) => {
-  // Construct the full image URL
-  const imageUrl = product.image
-    ? product.image.startsWith("http")
-      ? product.image
-      : `http://localhost:8000${product.image}`
-    : null;
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg shadow-md overflow-hidden"
-    >
-      <div className="p-4">
-        {/* Product Image */}
-        {imageUrl && (
-          <div className="relative w-full h-48 mb-4">
-            <Image
-              src={imageUrl}
-              alt={product.name}
-              fill
-              className="object-cover rounded-lg"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
+    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+      {/* Product Image */}
+      <div className="relative h-48 w-full">
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <span className="text-gray-400 font-vazirmatn">بدون تصویر</span>
           </div>
         )}
-
-        {/* Product Details */}
-        <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-        <p className="text-gray-600 mb-2">{product.description}</p>
-        <p className="text-blue-600 font-semibold">${product.price}</p>
-
-        {/* Delete Button - Only shown if onDelete prop is provided */}
-        {onDelete && (
-          <button
-            onClick={() => onDelete(product.id)}
-            className="mt-2 text-red-600 hover:text-red-800"
-          >
-            Delete
-          </button>
-        )}
       </div>
-    </motion.div>
+
+      {/* Product Info */}
+      <div className="p-4">
+        <h3 className="text-lg font-semibold mb-2 font-vazirmatn text-[#1E3A8A]">
+          {product.name}
+        </h3>
+        <p className="text-gray-600 text-sm mb-4 font-vazirmatn line-clamp-2">
+          {product.description}
+        </p>
+        <div className="flex justify-between items-center">
+          <span className="text-[#1E3A8A] font-bold font-vazirmatn">
+            {product.price.toLocaleString()} تومان
+          </span>
+          {onDelete && (
+            <button
+              onClick={() => onDelete(product.id)}
+              className="text-red-500 hover:text-red-600 transition-colors font-vazirmatn text-sm"
+            >
+              حذف
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 

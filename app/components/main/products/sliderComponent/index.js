@@ -75,7 +75,10 @@ export default function ProductSlider() {
   }, [isAnimating]);
 
   return (
-    <div className="relative w-full h-[600px] flex items-center justify-center overflow-hidden rounded-2xl bg-black">
+    <div
+      className="relative w-full h-[600px] flex items-center justify-center overflow-hidden rounded-2xl bg-black"
+      style={{ touchAction: "pan-y" }}
+    >
       <AnimatePresence mode="wait" onExitComplete={() => setIsAnimating(false)}>
         {slides.map((slide, i) =>
           i === index ? (

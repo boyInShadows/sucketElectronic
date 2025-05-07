@@ -244,8 +244,8 @@ const ProductsPage = () => {
             </h3>
             <form onSubmit={handleAddCategory}>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  نام دسته‌بندی
+                <label className="block font-medium text-neutral-700 mb-2">
+                  نام دسته‌ بندی
                 </label>
                 <input
                   type="text"

@@ -54,9 +54,9 @@ const FooterPart = () => {
   ];
 
   return (
-    <footer className="bg-neutral-900 text-white" dir="rtl">
-      <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12">
-        <div className="max-w-7xl mx-auto">
+    <footer className="bg-neutral-900 text-white w-full" dir="rtl">
+      <div className="w-full px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 sm:py-10 md:py-12">
+        <div className="w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
             {/* Quick Links */}
             <div className="order-1">

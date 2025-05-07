@@ -2,6 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "naskh";
+  src: url("../public/fonts/naskh.OTF") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "kalameh";
+  src: url("../public/fonts/kalameh.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "sayeh";
+  src: url("../public/fonts/sayeh.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "tanha";
+  src: url("../public/fonts/tanha.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "titr";
+  src: url("../public/fonts/titr.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "yekan";
+  src: url("../public/fonts/Yekan.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -9,7 +52,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #181f2a;
     --foreground: #ededed;
   }
 }
@@ -17,5 +60,15 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "tanha";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "titr";
+  font-weight: 100;
 }

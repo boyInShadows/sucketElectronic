@@ -83,21 +83,21 @@ const Products = () => {
       </section>
 
       {/* Features Section */}
-      <section className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-white">
-        <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+      <section className="w-full py-12 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="group bg-white rounded-xl border border-neutral-100 hover:border-primary/20 transition-all duration-300 p-4 sm:p-5 md:p-6 shadow-sm hover:shadow-md"
+                className="group bg-gradient-to-br from-primary/5 to-white rounded-2xl border border-neutral-100 hover:shadow-lg transition-all duration-300 p-6 flex flex-col items-center text-center"
               >
-                <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-lg bg-primary/5 text-primary group-hover:bg-primary/10 transition-colors duration-300 w-fit">
+                <div className="mb-4 p-3 rounded-full bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors duration-300 w-fit">
                   {feature.icon}
                 </div>
-                <h3 className="font-bold text-base sm:text-lg md:text-xl mb-2 sm:mb-3 text-neutral-800">
+                <h3 className="font-bold text-lg mb-2 text-neutral-800">
                   {feature.title}
                 </h3>
-                <p className="text-sm sm:text-base text-neutral-600 leading-relaxed">
+                <p className="text-base text-neutral-600">
                   {feature.description}
                 </p>
               </div>
