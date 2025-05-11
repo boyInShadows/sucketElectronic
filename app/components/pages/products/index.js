@@ -36,7 +36,7 @@ const CategoryCard = ({ category, onDelete }) => {
       <motion.div
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer relative"
+        className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer relative "
       >
         {isAdmin && (
           <button
@@ -76,7 +76,7 @@ const CategoryCard = ({ category, onDelete }) => {
                 {product.name}
               </span>
               <span className="text-sm font-medium text-accent mt-1">
-                {product.price} تومان
+                {product.formatted_price} تومان{" "}
               </span>
             </div>
           ))}
@@ -181,7 +181,7 @@ const ProductsPage = () => {
   };
 
   return (
-    <div dir="rtl" className="min-h-screen bg-neutral-50">
+    <div dir="rtl" className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white border-b border-neutral-100">
         <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12 py-6 sm:py-8">

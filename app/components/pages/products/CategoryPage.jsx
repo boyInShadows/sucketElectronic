@@ -214,57 +214,59 @@ const CategoryPage = ({ categorySlug }) => {
   });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header with Add Product button for admins */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold font-vazirmatn text-[#1E3A8A]">
-          {categoryData.name}
-        </h1>
-        {isAdmin && (
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-[#1E3A8A] text-white px-6 py-2 rounded-lg hover:bg-[#1E3A8A]/90 transition-colors font-vazirmatn text-sm"
-          >
-            افزودن محصول
-          </button>
-        )}
-      </div>
-
-      {/* Products Grid */}
-      {products.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500 mb-6 font-vazirmatn">
-            محصولی در این دسته‌بندی یافت نشد.
-          </p>
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header with Add Product button for admins */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-bold font-vazirmatn text-neutral-800">
+            {categoryData.name}
+          </h1>
           {isAdmin && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-[#1E3A8A] text-white px-6 py-2 rounded-lg hover:bg-[#1E3A8A]/90 transition-colors font-vazirmatn text-sm"
+              className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors font-vazirmatn text-sm"
             >
-              افزودن اولین محصول
+              افزودن محصول
             </button>
           )}
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onDelete={isAdmin ? handleDeleteProduct : null}
-            />
-          ))}
-        </div>
-      )}
 
-      {/* Add Product Modal */}
-      <AddProductModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleAddProduct}
-        formData={formData}
-        setFormData={setFormData}
-      />
+        {/* Products Grid */}
+        {products.length === 0 ? (
+          <div className="text-center py-12 bg-neutral-50 rounded-lg">
+            <p className="text-neutral-500 mb-6 font-vazirmatn">
+              محصولی در این دسته‌بندی یافت نشد.
+            </p>
+            {isAdmin && (
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors font-vazirmatn text-sm"
+              >
+                افزودن اولین محصول
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onDelete={isAdmin ? handleDeleteProduct : null}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Add Product Modal */}
+        <AddProductModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleAddProduct}
+          formData={formData}
+          setFormData={setFormData}
+        />
+      </div>
     </div>
   );
 };

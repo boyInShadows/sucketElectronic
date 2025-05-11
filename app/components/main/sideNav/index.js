@@ -9,6 +9,9 @@ import {
   MessageCircle,
   Phone,
   HelpCircle,
+  Layers,
+  PackageSearch,
+  Sparkles,
 } from "lucide-react";
 
 const navigationItems = [
@@ -18,24 +21,24 @@ const navigationItems = [
     icon: ImageIcon,
   },
   {
+    id: "features",
+    label: "ویژگی‌ها",
+    icon: Sparkles,
+  },
+  {
     id: "categories",
-    label: "دسته‌بندی محصولات",
+    label: "دسته‌بندی‌ها",
     icon: LayoutGrid,
   },
   {
-    id: "featured",
-    label: "محصولات ویژه",
-    icon: Star,
+    id: "latest-products",
+    label: "جدیدترین محصولات",
+    icon: PackageSearch,
   },
   {
     id: "articles",
     label: "مقالات",
     icon: BookText,
-  },
-  {
-    id: "comments",
-    label: "نظرات مشتریان",
-    icon: MessageCircle,
   },
   {
     id: "contact-us",

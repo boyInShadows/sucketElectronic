@@ -16,17 +16,21 @@ const ProductCard = ({ product, onDelete }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
       {/* Product Image */}
-      <div className="relative h-48 w-full">
+      <div className="relative aspect-square w-full bg-neutral-50 flex items-center justify-center">
         {product.image ? (
           <Image
             src={product.image}
             alt={product.name}
             fill
-            className="object-cover"
+            className="object-contain p-6"
+            style={{ background: "#f5f6fa" }}
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-            <span className="text-gray-400 font-vazirmatn">بدون تصویر</span>
+          <div className="w-full h-full flex items-center justify-center bg-neutral-100">
+            <span className="text-neutral-400 font-vazirmatn text-lg">
+              بدون تصویر
+            </span>
           </div>
         )}
       </div>
@@ -41,7 +45,8 @@ const ProductCard = ({ product, onDelete }) => {
         </p>
         <div className="flex justify-between items-center">
           <span className="text-[#1E3A8A] font-bold font-vazirmatn">
-            {product.price.toLocaleString()} تومان
+            {product.formatted_price || Number(product.price).toLocaleString()}{" "}
+            تومان
           </span>
           {onDelete && (
             <button

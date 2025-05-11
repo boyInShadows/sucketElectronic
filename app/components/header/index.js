@@ -41,6 +41,7 @@ const Header = () => {
     { name: "تماس با ما", href: "/contact" },
     { name: "درباره ما", href: "/about" },
     { name: "محصولات", href: "/products" },
+    { name: "مقالات", href: "/articles" },
     { name: "صفحه اصلی", href: "/" },
   ];
 

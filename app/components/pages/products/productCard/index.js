@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
         </h3>
         <div className="flex items-center justify-between">
           <span className="text-lg sm:text-xl font-bold text-primary">
-            {product.price} تومان
+            {product.formatted_price} تومان{" "}
           </span>
           <button className="p-2 rounded-lg bg-primary/5 text-primary hover:bg-primary/10 transition-colors duration-300">
             <ShoppingCart className="w-5 h-5" />

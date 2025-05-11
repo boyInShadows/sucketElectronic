@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 
 const NeshanMap = dynamic(() => import("react-neshan-map-leaflet"), {
@@ -13,6 +13,20 @@ const CustomNeshanMap = ({
   height = "350px",
   disabled = false,
 }) => {
+  const mapRef = useRef(null);
+  const [isMapInitialized, setIsMapInitialized] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup function
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+      setIsMapInitialized(false);
+    };
+  }, []);
+
   function checkCenter() {
     if (!center[0] || !center[1]) {
       return [36.1463, 49.218]; // Abhar, Zanjan coordinates
@@ -40,18 +54,10 @@ const CustomNeshanMap = ({
           borderRadius: "30px",
         }}
         onInit={(L, myMap) => {
-          // Create custom icon
-          const customIcon = L.icon({
-            iconUrl: "/images/marker.png",
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32],
-          });
+          if (isMapInitialized) return;
 
-          // Create marker with custom icon
-          let marker = L.marker(checkCenter(), { icon: customIcon }).addTo(
-            myMap
-          );
+          // Create marker with default icon
+          let marker = L.marker(checkCenter()).addTo(myMap);
 
           // Add popup to marker with more detailed information
           marker
@@ -71,6 +77,10 @@ const CustomNeshanMap = ({
               actionHandler(e.latlng.lat, e.latlng.lng);
             });
           }
+
+          // Store map instance and mark as initialized
+          mapRef.current = myMap;
+          setIsMapInitialized(true);
         }}
       />
     </div>
