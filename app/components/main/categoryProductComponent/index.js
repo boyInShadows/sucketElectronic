@@ -51,25 +51,23 @@ const CategoryProductComponent = ({ categories }) => {
 
   return (
     <div dir="rtl" className="w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
+      <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 py-4 px-2 sm:px-6 md:px-12 max-w-screen-xl mx-auto ">
         {cats.map((category) => (
           <Link
             href={`/products/${encodeURIComponent(category.slug)}`}
             key={category.id}
           >
-            <div className="group bg-white rounded-2xl border border-neutral-100 hover:shadow-2xl shadow-md transition-all duration-300 overflow-hidden flex flex-col items-stretch p-0 relative min-h-[180px] hover:scale-105 hover:border-primary/40 cursor-pointer">
-              <div className="flex-1 flex flex-col justify-center items-center p-7">
-                <h3 className="font-extrabold text-xl md:text-2xl text-neutral-800 group-hover:text-primary transition-colors duration-300 text-center mb-3">
-                  {category.name}
-                </h3>
-                <div className=" bg-gradient-to-r from-primary to-blue-400 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg z-10 border-2 border-white mb-3">
-                  {category.productCount} محصول
-                </div>
-                <p className="text-primary text-center text-sm">
-                  مشاهده محصولات
-                </p>
-                <ChevronDown className="w-4 h-4" />
+            <div className="group bg-white rounded-2xl border border-neutral-100 hover:shadow-2xl shadow-md transition-all duration-300 overflow-hidden flex flex-col justify-between items-center p-7 w-[70vw] sm:w-full sm:max-w-md h-56 hover:scale-105 hover:border-primary/40 cursor-pointer">
+              <h3 className="font-extrabold text-xl md:text-2xl text-neutral-800 group-hover:text-primary transition-colors duration-300 text-center mb-3 truncate whitespace-nowrap overflow-hidden w-full">
+                {category.name}
+              </h3>
+              <div className=" bg-gradient-to-r from-primary to-blue-400 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg z-10 border-2 border-white mb-3">
+                {category.productCount} محصول
               </div>
+              <p className="text-primary text-center text-sm mb-2">
+                مشاهده محصولات
+              </p>
+              <ChevronDown className="w-4 h-4" />
             </div>
           </Link>
         ))}

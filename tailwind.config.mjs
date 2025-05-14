@@ -91,16 +91,16 @@ const config = {
         body: ["tanha"],
       },
       fontSize: {
-        xs: ["1rem", { lineHeight: "1.5" }], // 16px
-        sm: ["1.125rem", { lineHeight: "1.75" }], // 18px
-        base: ["1.25rem", { lineHeight: "1.75" }], // 20px
-        lg: ["1.5rem", { lineHeight: "2" }], // 24px
-        xl: ["1.75rem", { lineHeight: "2.25" }], // 28px
-        "2xl": ["2rem", { lineHeight: "2.5" }], // 32px
-        "3xl": ["2.5rem", { lineHeight: "2.75" }], // 40px
-        "4xl": ["3rem", { lineHeight: "1" }], // 48px
-        "5xl": ["3.5rem", { lineHeight: "1" }], // 56px
-        "6xl": ["4rem", { lineHeight: "1" }], // 64px
+        xs: ["0.875rem", { lineHeight: "1.5" }], // 14px
+        sm: ["1rem", { lineHeight: "1.75" }], // 16px
+        base: ["1.125rem", { lineHeight: "1.75" }], // 18px
+        lg: ["1.25rem", { lineHeight: "2" }], // 20px
+        xl: ["1.5rem", { lineHeight: "2.25" }], // 24px
+        "2xl": ["1.75rem", { lineHeight: "2.5" }], // 28px
+        "3xl": ["2rem", { lineHeight: "2.75" }], // 32px
+        "4xl": ["2.5rem", { lineHeight: "1" }], // 40px
+        "5xl": ["3rem", { lineHeight: "1" }], // 48px
+        "6xl": ["3.5rem", { lineHeight: "1" }], // 56px
       },
       fontWeight: {
         thin: "100",
@@ -166,31 +166,164 @@ const config = {
     rtl,
     function ({ addBase }) {
       addBase({
+        // Body text elements
         input: {
           color: "rgb(38 38 38)", // This is the RGB value for text-neutral-800
         },
         textarea: {
           color: "rgb(38 38 38)", // This is the RGB value for text-neutral-800
         },
-        p: {
-          fontSize: "1.5rem", // 16px
+        "p, li, td, th, label, a, span, input, textarea, select, option": {
+          fontSize: "1rem", // 16px
           lineHeight: "1.75",
-          // fontFamily: "tanha",
-        },
-        span: {
-          fontSize: "1.25rem", // 16px
-          lineHeight: "1.75",
-          // fontFamily: "tanha",
-        },
-        label: {
-          fontSize: "1.5rem", // 16px
-          lineHeight: "1.75",
-          // fontFamily: "kalameh",
         },
         button: {
           fontSize: "1rem", // 16px
           fontWeight: "800",
-          // fontFamily: "tanha",
+        },
+        h1: {
+          fontSize: "2rem", // 32px
+          lineHeight: "1.2",
+          fontWeight: "700",
+        },
+        h2: {
+          fontSize: "1.75rem", // 28px
+          lineHeight: "1.3",
+          fontWeight: "700",
+        },
+        h3: {
+          fontSize: "1.5rem", // 24px
+          lineHeight: "1.4",
+          fontWeight: "600",
+        },
+        h4: {
+          fontSize: "1.25rem", // 20px
+          lineHeight: "1.5",
+          fontWeight: "600",
+        },
+        h5: {
+          fontSize: "1.125rem", // 18px
+          lineHeight: "1.6",
+          fontWeight: "500",
+        },
+        h6: {
+          fontSize: "1rem", // 16px
+          lineHeight: "1.7",
+          fontWeight: "500",
+        },
+        // Responsive font sizes
+        "@screen sm": {
+          "p, li, td, th, label, a, span, input, textarea, select, option": {
+            fontSize: "1.125rem", // 18px
+          },
+          button: {
+            fontSize: "1.125rem",
+          },
+          h1: { fontSize: "2.5rem" }, // 40px
+          h2: { fontSize: "2rem" }, // 32px
+          h3: { fontSize: "1.75rem" }, // 28px
+          h4: { fontSize: "1.5rem" }, // 24px
+          h5: { fontSize: "1.25rem" }, // 20px
+        },
+        "@screen md": {
+          "p, li, td, th, label, a, span, input, textarea, select, option": {
+            fontSize: "1.25rem", // 20px
+          },
+          button: {
+            fontSize: "1.25rem",
+          },
+          h1: { fontSize: "3rem" }, // 48px
+          h2: { fontSize: "2.5rem" }, // 40px
+          h3: { fontSize: "2rem" }, // 32px
+          h4: { fontSize: "1.75rem" }, // 28px
+          h5: { fontSize: "1.5rem" }, // 24px
+        },
+        "@screen lg": {
+          "p, li, td, th, label, a, span, input, textarea, select, option": {
+            fontSize: "1.375rem", // 22px
+          },
+          button: {
+            fontSize: "1.375rem",
+          },
+          h1: { fontSize: "3.5rem" }, // 56px
+          h2: { fontSize: "3rem" }, // 48px
+          h3: { fontSize: "2.5rem" }, // 40px
+          h4: { fontSize: "2rem" }, // 32px
+          h5: { fontSize: "1.75rem" }, // 28px
+        },
+        "@screen xl": {
+          "p, li, td, th, label, a, span, input, textarea, select, option": {
+            fontSize: "1.5rem", // 24px
+          },
+          button: {
+            fontSize: "1.5rem",
+          },
+          h1: { fontSize: "4rem" }, // 64px
+          h2: { fontSize: "3.5rem" }, // 56px
+          h3: { fontSize: "3rem" }, // 48px
+          h4: { fontSize: "2.5rem" }, // 40px
+          h5: { fontSize: "2rem" }, // 32px
+        },
+      });
+    },
+    function ({ addComponents }) {
+      addComponents({
+        ".text-responsive": {
+          fontSize: "1.5rem", // Base (mobile)
+          lineHeight: "1.75",
+          "@screen sm": {
+            fontSize: "1.625rem", // sm (640px)
+          },
+          "@screen md": {
+            fontSize: "1.75rem", // md (768px)
+          },
+          "@screen lg": {
+            fontSize: "1.875rem", // lg (1024px)
+          },
+          "@screen xl": {
+            fontSize: "2rem", // xl (1280px)
+          },
+          "@screen 2xl": {
+            fontSize: "2.125rem", // 2xl (1536px)
+          },
+        },
+        ".text-responsive-sm": {
+          fontSize: "1.25rem", // Base (mobile)
+          lineHeight: "1.75",
+          "@screen sm": {
+            fontSize: "1.375rem", // sm (640px)
+          },
+          "@screen md": {
+            fontSize: "1.5rem", // md (768px)
+          },
+          "@screen lg": {
+            fontSize: "1.625rem", // lg (1024px)
+          },
+          "@screen xl": {
+            fontSize: "1.75rem", // xl (1280px)
+          },
+          "@screen 2xl": {
+            fontSize: "1.875rem", // 2xl (1536px)
+          },
+        },
+        ".text-responsive-xs": {
+          fontSize: "1rem", // Base (mobile)
+          lineHeight: "1.75",
+          "@screen sm": {
+            fontSize: "1.125rem", // sm (640px)
+          },
+          "@screen md": {
+            fontSize: "1.25rem", // md (768px)
+          },
+          "@screen lg": {
+            fontSize: "1.375rem", // lg (1024px)
+          },
+          "@screen xl": {
+            fontSize: "1.5rem", // xl (1280px)
+          },
+          "@screen 2xl": {
+            fontSize: "1.625rem", // 2xl (1536px)
+          },
         },
       });
     },

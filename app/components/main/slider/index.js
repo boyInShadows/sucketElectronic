@@ -52,6 +52,28 @@ const slides = [
 export default function ProductSlider() {
   const [index, setIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  // Swipe state
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  // Swipe handlers
+  const minSwipeDistance = 50;
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > minSwipeDistance) {
+      nextSlide(); // swipe left
+    } else if (distance < -minSwipeDistance) {
+      prevSlide(); // swipe right
+    }
+  };
 
   const nextSlide = () => {
     if (isAnimating) return;
@@ -76,8 +98,11 @@ export default function ProductSlider() {
 
   return (
     <div
-      className="relative w-full h-[600px] flex items-center justify-center overflow-hidden rounded-2xl bg-black"
+      className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center overflow-hidden rounded-2xl bg-black"
       style={{ touchAction: "pan-y" }}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       <AnimatePresence mode="wait" onExitComplete={() => setIsAnimating(false)}>
         {slides.map((slide, i) =>
@@ -95,7 +120,7 @@ export default function ProductSlider() {
                 alt={slide.title}
                 fill
                 priority
-                sizes="100vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                 style={{ objectFit: "cover" }}
                 className="absolute inset-0"
               />
@@ -106,20 +131,20 @@ export default function ProductSlider() {
               <div className="absolute inset-0 bg-gradient-to-l from-black/70 via-black/50 to-transparent" />
 
               {/* Content */}
-              <div className="relative h-full flex items-center justify-start px-8 md:px-16 lg:px-24">
+              <div className="relative h-full flex items-center justify-start px-2 sm:px-8 md:px-12 lg:px-24">
                 <motion.div
-                  className="max-w-3xl text-white text-right"
+                  className="max-w-[200px] sm:max-w-md md:max-w-2xl lg:max-w-3xl text-white text-right"
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
                 >
-                  <span className="inline-block px-4 py-1.5 bg-accent/90 text-white rounded-full text-sm font-medium mb-4">
+                  <span className="inline-block px-2 py-0.5 sm:px-4 sm:py-1.5 bg-accent/90 text-white rounded-full text-[10px] sm:text-sm font-medium mb-1 sm:mb-4">
                     {slide.topic}
                   </span>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 font-display leading-tight">
+                  <h2 className="text-base sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-4 font-display leading-tight line-clamp-3">
                     {slide.title}
                   </h2>
-                  <p className="text-base sm:text-lg md:text-xl text-white/90 font-body leading-relaxed">
+                  <p className="text-xs sm:text-base md:text-lg lg:text-xl text-white/90 font-body leading-relaxed line-clamp-2 sm:line-clamp-none">
                     {slide.description}
                   </p>
                 </motion.div>
@@ -129,25 +154,25 @@ export default function ProductSlider() {
         )}
       </AnimatePresence>
 
-      {/* Navigation Buttons */}
+      {/* Navigation Buttons - Only show on sm+ */}
       <button
         onClick={nextSlide}
-        className="absolute left-4 bg-white/10 backdrop-blur-sm p-3 rounded-full hover:bg-white/20 transition-all duration-300 group"
+        className="absolute left-2 sm:left-4 bg-white/10 backdrop-blur-sm p-2 sm:p-3 rounded-full hover:bg-white/20 transition-all duration-300 group hidden sm:block"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="text-white w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
+        <ChevronLeft className="text-white w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
       </button>
       <button
         onClick={prevSlide}
-        className="absolute right-4 bg-white/10 backdrop-blur-sm p-3 rounded-full hover:bg-white/20 transition-all duration-300 group"
+        className="absolute right-2 sm:right-4 bg-white/10 backdrop-blur-sm p-2 sm:p-3 rounded-full hover:bg-white/20 transition-all duration-300 group hidden sm:block"
         aria-label="Next slide"
       >
-        <ChevronRight className="text-white w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
+        <ChevronRight className="text-white w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
       </button>
 
-      {/* Thumbnail Preview */}
+      {/* Thumbnail Preview - Hidden on mobile */}
       <motion.div
-        className="absolute bottom-6 right-6 flex gap-2"
+        className="absolute bottom-4 sm:bottom-6 right-4 sm:right-6 hidden sm:flex gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -162,7 +187,7 @@ export default function ProductSlider() {
                 setIndex(i);
               }
             }}
-            className={`relative w-16 h-12 rounded-lg overflow-hidden transition-all duration-300 ${
+            className={`relative w-12 h-8 sm:w-16 sm:h-12 rounded-lg overflow-hidden transition-all duration-300 ${
               i === index
                 ? "ring-2 ring-white scale-110"
                 : "opacity-50 hover:opacity-75"
@@ -175,7 +200,7 @@ export default function ProductSlider() {
               src={slide.src}
               alt={slide.title}
               fill
-              sizes="64px"
+              sizes="(max-width: 640px) 48px, 64px"
               style={{ objectFit: "cover" }}
               className="transition-transform duration-300 hover:scale-110"
             />
@@ -184,9 +209,9 @@ export default function ProductSlider() {
         ))}
       </motion.div>
 
-      {/* Slide Progress */}
+      {/* Slide Progress - Enhanced for mobile */}
       <motion.div
-        className="absolute bottom-6 left-6 flex gap-1"
+        className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 flex gap-1"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -196,7 +221,7 @@ export default function ProductSlider() {
           <motion.div
             key={i}
             className={`h-1 rounded-full transition-all duration-300 ${
-              i === index ? "bg-white w-8" : "bg-white/30 w-2"
+              i === index ? "bg-white w-6 sm:w-8" : "bg-white/30 w-1.5 sm:w-2"
             }`}
           />
         ))}
