@@ -20,7 +20,6 @@ const ForgotPasswordPage = () => {
 
     try {
       // TODO: Implement forgot password API call
-      console.log("Forgot password request for:", email);
 
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));

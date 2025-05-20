@@ -24,10 +24,6 @@ const Login = () => {
 
     try {
       const response = await login(formData);
-      console.log("Full login response:", JSON.stringify(response, null, 2));
-      console.log("Response keys:", Object.keys(response));
-      console.log("User object:", response.user);
-
       // Store the token and username in localStorage
       localStorage.setItem("token", response.access);
       localStorage.setItem("username", formData.username);

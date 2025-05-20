@@ -62,7 +62,7 @@ const CategoryProductComponent = ({ categories }) => {
                 {category.name}
               </h3>
               <div className=" bg-gradient-to-r from-primary to-blue-400 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg z-10 border-2 border-white mb-3">
-                {category.productCount} محصول
+                {category.productsCount} محصول
               </div>
               <p className="text-primary text-center text-sm mb-2">
                 مشاهده محصولات

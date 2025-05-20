@@ -70,8 +70,6 @@ const SignUp = () => {
         password: formData.password,
       });
 
-      console.log("Registration response:", response);
-
       if (response.access) {
         // Store the token in localStorage
         localStorage.setItem("token", response.access);

@@ -35,14 +35,10 @@ const CategoryPage = ({ categorySlug }) => {
       if (!categorySlug) return;
 
       try {
-        console.log("Fetching category with slug:", categorySlug);
         const response = await fetch(
           `http://localhost:8000/api/categories/?slug=${categorySlug}`
         );
         const data = await response.json();
-        console.log("Category API response:", data);
-        console.log("Response status:", response.status);
-        console.log("Response headers:", response.headers);
 
         if (!response.ok) {
           throw new Error(
@@ -57,16 +53,13 @@ const CategoryPage = ({ categorySlug }) => {
 
         if (categoryInfo) {
           setCategoryData(categoryInfo);
-          console.log("Category found:", categoryInfo);
 
           // Fetch products using the category ID
-          console.log("Fetching products for category ID:", categoryInfo.id);
           const productsResponse = await fetch(
             `http://localhost:8000/api/products/?category_id=${categoryInfo.id}`
           );
 
           const productsData = await productsResponse.json();
-          console.log("Products response:", productsData);
 
           if (!productsResponse.ok) {
             throw new Error(productsData.error || "Failed to fetch products");
@@ -74,7 +67,6 @@ const CategoryPage = ({ categorySlug }) => {
 
           setProducts(Array.isArray(productsData) ? productsData : []);
         } else {
-          console.log("No category found in response. Full response:", data);
           setError("Category not found");
         }
       } catch (error) {
@@ -109,14 +101,6 @@ const CategoryPage = ({ categorySlug }) => {
         formDataToSend.append("image", formData.image);
       }
 
-      console.log("Creating product with data:", {
-        name: formData.name,
-        description: formData.description,
-        price: formData.price,
-        category_id: categoryData.id,
-        hasImage: !!formData.image,
-      });
-
       const response = await fetch("http://localhost:8000/api/products/", {
         method: "POST",
         headers: {
@@ -132,8 +116,6 @@ const CategoryPage = ({ categorySlug }) => {
       }
 
       const newProduct = await response.json();
-      console.log("Product created successfully:", newProduct);
-
       // Ensure the image URL is properly formatted
       if (newProduct.image && !newProduct.image.startsWith("http")) {
         newProduct.image = `http://localhost:8000${newProduct.image}`;
@@ -205,13 +187,6 @@ const CategoryPage = ({ categorySlug }) => {
       </div>
     );
   }
-
-  console.log("Current state:", {
-    isAdmin,
-    productsCount: products.length,
-    categoryData,
-    sessionStatus: status,
-  });
 
   return (
     <div className="min-h-screen bg-white">

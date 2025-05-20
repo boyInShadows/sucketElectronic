@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Send,
   MapPin,
@@ -7,15 +7,57 @@ import {
   Mail,
   Clock,
   Instagram,
-  Linkedin,
-  Facebook,
   User,
   AtSign,
   MessageSquare,
 } from "lucide-react";
+import { SocialIcon } from "react-social-icons";
 import CustomNeshanMap from "../../neshanMap";
 
 const ContactUsComponent = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await fetch("http://localhost:8000/api/messages/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "خطا در ارسال پیام");
+      }
+
+      setSuccess("پیام شما با موفقیت ثبت شد و توسط مدیران بررسی خواهد شد.");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (err) {
+      setError(err.message || "خطا در ارسال پیام. لطفا دوباره تلاش کنید.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
   return (
     <section
       id="contact-us"
@@ -23,8 +65,8 @@ const ContactUsComponent = () => {
     >
       <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="max-w-4xl mx-auto mb-10 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-primary mb-3">
-            ارتباط با ما
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-neutral-800">
+            تماس با ما
           </h2>
           <p className="text-neutral-600 text-base sm:text-lg">
             سوال، پیشنهاد یا نیاز به مشاوره دارید؟ فرم زیر را پر کنید یا از
@@ -34,7 +76,7 @@ const ContactUsComponent = () => {
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start bg-white rounded-3xl shadow-lg border border-neutral-100 p-6 md:p-10">
           {/* Right: Contact Form */}
           <div className="flex flex-col gap-6 justify-center">
-            <form className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="relative">
                 <label
                   htmlFor="name"
@@ -48,8 +90,11 @@ const ContactUsComponent = () => {
                 <input
                   id="name"
                   type="text"
+                  value={formData.name}
+                  onChange={handleChange}
                   className="w-full p-3 pl-10 rounded-xl border border-neutral-200 focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-300 text-right bg-white text-base"
                   placeholder="نام خود را وارد کنید"
+                  required
                 />
               </div>
               <div className="relative">
@@ -65,8 +110,11 @@ const ContactUsComponent = () => {
                 <input
                   id="email"
                   type="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full p-3 pl-10 rounded-xl border border-neutral-200 focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-300 text-right bg-white text-base"
                   placeholder="ایمیل خود را وارد کنید"
+                  required
                 />
               </div>
               <div className="relative">
@@ -81,17 +129,38 @@ const ContactUsComponent = () => {
                 </span>
                 <textarea
                   id="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   rows="4"
                   className="w-full p-3 pl-10 rounded-xl border border-neutral-200 focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-300 text-right bg-white text-base"
                   placeholder="پیام خود را وارد کنید"
+                  required
                 ></textarea>
               </div>
+              {error && (
+                <div className="text-red-500 text-sm text-right">{error}</div>
+              )}
+              {success && (
+                <div className="text-green-500 text-sm text-right">
+                  {success}
+                </div>
+              )}
               <button
                 type="submit"
-                className="w-full bg-primary/95 text-white py-3 rounded-xl hover:bg-primary transition-colors duration-300 font-bold text-base flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+                disabled={loading}
+                className="w-full bg-primary/95 text-white py-3 rounded-xl hover:bg-primary transition-colors duration-300 font-bold text-base flex items-center justify-center gap-2 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                ارسال پیام
-                <Send className="w-5 h-5" />
+                {loading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    در حال ارسال...
+                  </>
+                ) : (
+                  <>
+                    ارسال پیام
+                    <Send className="w-5 h-5" />
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -106,35 +175,33 @@ const ContactUsComponent = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="w-5 h-5 text-white/90" />
-                  <span>۰۹۱۲۱۲۳۴۵۶۷</span>
+                  <span>0912-0986781</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone className="w-5 h-5 text-white/90" />
+                  <span>0938-0919555</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="w-5 h-5 text-white/90" />
-                  <span>info@omid-electronic.com</span>
+                  <span>zyzzyzkhany@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-white/90" />
                   <span>ساعات کاری: ۹ تا ۱۸ (شنبه تا پنجشنبه)</span>
                 </div>
-                <div className="flex items-center gap-3 mt-4">
-                  <a
-                    href="#"
-                    className="hover:scale-110 transition-transform text-white"
-                  >
-                    <Instagram className="w-5 h-5" />
-                  </a>
-                  <a
-                    href="#"
-                    className="hover:scale-110 transition-transform text-white"
-                  >
-                    <Linkedin className="w-5 h-5" />
-                  </a>
-                  <a
-                    href="#"
-                    className="hover:scale-110 transition-transform text-white"
-                  >
-                    <Facebook className="w-5 h-5" />
-                  </a>
+                <div className="flex items-center justify-center gap-8 pt-4">
+                  <SocialIcon
+                    network="instagram"
+                    label="instagram"
+                    url="https://www.instagram.com/omidelekteronik4/"
+                  />
+
+                  <SocialIcon
+                    network="telegram"
+                    url="https://web.telegram.org/k/#5973898318"
+                  />
+
+                  <SocialIcon network="whatsapp" />
                 </div>
               </div>
             </div>

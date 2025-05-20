@@ -1,8 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import Products from "./products";
 import Articles from "./articles";
-import Comments from "./comments";
 import SideNav from "./sideNav";
 import CustomNeshanMap from "../neshanMap";
 import ContactUs from "./contactUs";
@@ -155,7 +153,7 @@ const Main = () => {
           className="w-full py-8 sm:py-10 md:py-12 lg:py-16"
         >
           <div className="mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
-            <div className="max-w-[95%] mx-auto">
+            <div className="max-w-[100%] mx-auto">
               <FeaturesSection features={features} />
             </div>
           </div>
@@ -203,9 +201,6 @@ const Main = () => {
         >
           <div className="mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
             <div className="max-w-[95%] mx-auto">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-neutral-800">
-                تماس با ما
-              </h2>
               <ContactUs />
             </div>
           </div>

@@ -41,11 +41,11 @@ const FooterPart = () => {
   const contactInfo = [
     {
       icon: <Phone className="w-4 h-4 sm:w-5 sm:h-5" />,
-      text: "۰۹۱۲-۱۲۳-۴۵۶۷",
+      text: "0912-0986781",
     },
     {
       icon: <Mail className="w-4 h-4 sm:w-5 sm:h-5" />,
-      text: "info@omid-electronic.ir",
+      text: "zyzzyzkhany@gmail.com",
     },
     {
       icon: <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />,
@@ -118,30 +118,6 @@ const FooterPart = () => {
                   </a>
                 ))}
               </div>
-            </div>
-
-            {/* Newsletter */}
-            <div className="order-4">
-              <h3 className="text-base sm:text-lg font-bold mb-4 text-right">
-                خبرنامه
-              </h3>
-              <p className="text-neutral-300 text-sm mb-4 text-right">
-                برای دریافت آخرین اخبار و تخفیف‌ها عضو شوید
-              </p>
-              <form className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  placeholder="ایمیل شما"
-                  className="flex-1 p-2 rounded-lg bg-neutral-800 border border-neutral-700 focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-300 text-sm text-right"
-                  aria-label="ایمیل"
-                />
-                <button
-                  type="submit"
-                  className="bg-primary/95 text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors duration-300 text-sm whitespace-nowrap"
-                >
-                  عضویت
-                </button>
-              </form>
             </div>
           </div>
 

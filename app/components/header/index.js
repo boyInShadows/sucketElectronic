@@ -110,19 +110,14 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center bg-white/80 border border-neutral-200 rounded-full px-2 py-1 gap-x-1 shadow backdrop-blur-sm">
-            <button
-              className="p-2 rounded-full hover:bg-primary/10 focus:bg-primary/20 transition-colors duration-200 text-neutral-700 hover:text-primary"
-              aria-label="جستجو"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-            <button
-              className="p-2 rounded-full hover:bg-primary/10 focus:bg-primary/20 transition-colors duration-200 text-neutral-700 hover:text-primary"
-              aria-label="سبد خرید"
-              onClick={() => router.push("/cart")}
-            >
-              <ShoppingCart className="w-5 h-5" />
-            </button>
+            <Link href="/products" aria-label="جست و جو محصول">
+              <button
+                className="p-2 rounded-full hover:bg-primary/10 focus:bg-primary/20 transition-colors duration-200 text-neutral-700 hover:text-primary"
+                aria-label="جستجو"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+            </Link>
             <Link
               href={username ? "/profile" : "/login"}
               className="flex items-center p-2 rounded-full hover:bg-primary/10 focus:bg-primary/20 transition-colors duration-200 text-neutral-700 hover:text-primary"
