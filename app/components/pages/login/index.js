@@ -5,6 +5,7 @@ import { User, Lock, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { login } from "@/app/libs/api";
+import { setAuthState } from "@/app/libs/auth";
 
 const Login = () => {
   const router = useRouter();
@@ -24,13 +25,12 @@ const Login = () => {
 
     try {
       const response = await login(formData);
-      // Store the token and username in localStorage
-      localStorage.setItem("token", response.access);
-      localStorage.setItem("username", formData.username);
-
-      // Get is_admin from the user object in the response
-      const isAdmin = response.user?.is_admin || false;
-      localStorage.setItem("is_admin", isAdmin);
+      // Store auth state using the utility function
+      setAuthState(
+        response.access,
+        formData.username,
+        response.user?.is_admin || false
+      );
 
       // Show welcome popup
       setShowWelcomePopup(true);

@@ -27,7 +27,10 @@ const CategoryPage = ({ categorySlug }) => {
 
   // Session and admin management
   const { data: session, status } = useSession();
-  const isAdmin = localStorage.getItem("is_admin") === "true";
+  const isAdmin =
+    typeof window !== "undefined"
+      ? localStorage.getItem("is_admin") === "true"
+      : false;
 
   // Fetch products when category changes
   useEffect(() => {
@@ -83,7 +86,8 @@ const CategoryPage = ({ categorySlug }) => {
     e.preventDefault();
 
     // Get the token from localStorage
-    const token = localStorage.getItem("token");
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
       setError("You must be logged in to add products");
       return;
@@ -133,7 +137,8 @@ const CategoryPage = ({ categorySlug }) => {
   // Handle deleting a product
   const handleDeleteProduct = async (productId) => {
     // Get the token from localStorage
-    const token = localStorage.getItem("token");
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
       setError("You must be logged in to delete products");
       return;

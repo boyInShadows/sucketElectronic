@@ -14,7 +14,10 @@ import Link from "next/link";
 import CardProductComponent from "@/app/components/main/products/cartProductComponent";
 
 const CategoryCard = ({ category, onDelete }) => {
-  const isAdmin = localStorage.getItem("is_admin") === "true";
+  const isAdmin =
+    typeof window !== "undefined"
+      ? localStorage.getItem("is_admin") === "true"
+      : false;
   const [isDeleting, setIsDeleting] = useState(false);
   const productCount = category.productsCount || category.products?.length || 0;
   const previewProducts = category.products?.slice(0, 3) || [];
@@ -102,7 +105,10 @@ const CategoryCard = ({ category, onDelete }) => {
 
 const ProductsPage = () => {
   const { data: session } = useSession();
-  const isAdmin = localStorage.getItem("is_admin") === "true";
+  const isAdmin =
+    typeof window !== "undefined"
+      ? localStorage.getItem("is_admin") === "true"
+      : false;
   const [categories, setCategories] = useState([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "" });
@@ -119,7 +125,8 @@ const ProductsPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const headers = {
         "Content-Type": "application/json",
       };
@@ -149,7 +156,8 @@ const ProductsPage = () => {
 
   const handleDeleteCategory = async (categoryId) => {
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const response = await fetch(
         `http://localhost:8000/api/categories/${categoryId}/`,
         {
@@ -183,8 +191,22 @@ const ProductsPage = () => {
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
+    setError("");
+
+    // Validate category name
+    if (!newCategory.name.trim()) {
+      setError("نام دسته‌بندی نمی‌تواند خالی باشد");
+      return;
+    }
+
+    if (newCategory.name.length < 2) {
+      setError("نام دسته‌بندی باید حداقل 2 حرف باشد");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const response = await fetch("http://localhost:8000/api/categories/", {
         method: "POST",
         headers: {
@@ -200,7 +222,17 @@ const ProductsPage = () => {
       } catch {}
 
       if (!response.ok) {
-        throw new Error(data.detail || "خطا در ایجاد دسته‌بندی");
+        if (response.status === 400) {
+          throw new Error(
+            data.detail || "خطا در ایجاد دسته‌بندی. لطفا نام دیگری انتخاب کنید."
+          );
+        } else if (response.status === 401) {
+          throw new Error("شما دسترسی لازم برای ایجاد دسته‌بندی را ندارید.");
+        } else if (response.status === 403) {
+          throw new Error("شما دسترسی لازم برای ایجاد دسته‌بندی را ندارید.");
+        } else {
+          throw new Error(data.detail || "خطا در ایجاد دسته‌بندی");
+        }
       }
 
       setCategories([...categories, data]);

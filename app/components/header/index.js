@@ -18,6 +18,7 @@ import {
   Phone,
   Info,
 } from "lucide-react";
+import { getAuthState, clearAuthState } from "@/app/libs/auth";
 
 // Images
 import Logo from "@/app/public/images/Logo2.png";
@@ -45,21 +46,17 @@ const Header = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Get username and admin status from localStorage
-    const storedUsername = localStorage.getItem("username");
-    const storedIsAdmin = localStorage.getItem("is_admin");
-
+    // Get auth state using the utility function
+    const { username: storedUsername, isAdmin: storedIsAdmin } = getAuthState();
     if (storedUsername) {
       setUsername(storedUsername);
-      setIsAdmin(storedIsAdmin === "true");
+      setIsAdmin(storedIsAdmin);
     }
   }, []);
 
   const handleLogout = () => {
-    // Clear user data from localStorage
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    localStorage.removeItem("is_admin");
+    // Clear auth state using the utility function
+    clearAuthState();
     setUsername("");
     setIsAdmin(false);
     setShowLogoutPopup(false);

@@ -3,14 +3,14 @@
 import { usePathname } from "next/navigation";
 import Header from "@/app/components/header";
 import { useEffect, useState } from "react";
+import { isAuthenticated, isAdmin } from "@/app/libs/auth";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    setIsLoggedIn(isAuthenticated());
   }, []);
 
   const hideHeaderPages = ["/login", "/signup", "/forgotPassword"];
@@ -18,10 +18,7 @@ export default function ClientLayout({ children }) {
 
   // Handle users page access
   if (pathname === "/users") {
-    const token = localStorage.getItem("token");
-    const isAdmin = localStorage.getItem("is_admin") === "true";
-
-    if (!token || !isAdmin) {
+    if (!isAuthenticated() || !isAdmin()) {
       window.location.href = "/";
       return null;
     }

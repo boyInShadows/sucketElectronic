@@ -1,8 +1,7 @@
-import React from "react";
-import Users from "@/app/components/pages/users";
+export const dynamic = "force-dynamic";
 
-const page = () => {
-  return <Users />;
-};
+import UsersClient from "./UsersClient";
 
-export default page;
+export default function Page() {
+  return <UsersClient />;
+}

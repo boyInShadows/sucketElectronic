@@ -11,6 +11,12 @@ const nextConfig = {
       },
     ],
   },
+  // Disable static optimization for specific pages
+  pageExtensions: ["js", "jsx", "ts", "tsx"],
+  // Disable static optimization for the users page
+  staticPageGenerationTimeout: 120,
+  // Disable static optimization for the users page
+  output: "standalone",
 };
 
 module.exports = nextConfig;
