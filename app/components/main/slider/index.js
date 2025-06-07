@@ -141,7 +141,7 @@ export default function ProductSlider() {
                   <span className="inline-block px-2 py-0.5 sm:px-4 sm:py-1.5 bg-accent/90 text-white rounded-full text-[10px] sm:text-sm font-medium mb-1 sm:mb-4">
                     {slide.topic}
                   </span>
-                  <h2 className="text-base sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-4 font-display leading-tight line-clamp-3">
+                  <h2 className="text-base sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-4 font-display leading-tight ">
                     {slide.title}
                   </h2>
                   <p className="text-xs sm:text-base md:text-lg lg:text-xl text-white/90 font-body leading-relaxed line-clamp-2 sm:line-clamp-none">

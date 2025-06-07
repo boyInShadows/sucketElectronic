@@ -303,9 +303,10 @@ const ArticlesPage = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <button
-                className="absolute top-3 right-3 sm:top-5 sm:left-5 z-10 text-neutral-500 hover:text-red-500 bg-white/80 rounded-full p-2 shadow border border-neutral-200"
+                className="absolute top-3 right-3 sm:top-5 sm:right-5 z-10 text-neutral-700 hover:text-red-500 bg-black/20 hover:bg-black/40 rounded-full p-2 transition-colors duration-200"
                 onClick={() => setSelectedArticle(null)}
                 title="بستن"
+                style={{ backdropFilter: "blur(2px)" }}
               >
                 <X size={24} />
               </button>
