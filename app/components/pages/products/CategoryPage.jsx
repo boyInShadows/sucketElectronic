@@ -1,7 +1,8 @@
 "use client";
 
+import { apiUrl } from "../../../libs/api";
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { isAuthenticated, isAdmin } from "../../../libs/auth";
 import ProductCard from "./ProductCard";
 import AddProductModal from "./AddProductModal";
 
@@ -25,12 +26,14 @@ const CategoryPage = ({ categorySlug }) => {
   const [categoryData, setCategoryData] = useState(null);
   const [error, setError] = useState(null);
 
-  // Session and admin management
-  const { data: session, status } = useSession();
-  const isAdmin =
-    typeof window !== "undefined"
-      ? localStorage.getItem("is_admin") === "true"
-      : false;
+  // Authentication and admin management
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated());
+    setIsUserAdmin(isAdmin());
+  }, []);
 
   // Fetch products when category changes
   useEffect(() => {
@@ -38,9 +41,9 @@ const CategoryPage = ({ categorySlug }) => {
       if (!categorySlug) return;
 
       try {
-        const response = await fetch(
-          `http://localhost:8000/api/categories/?slug=${categorySlug}`
-        );
+        const response = await fetch(apiUrl(
+          `/categories/?slug=${categorySlug}`
+        ));
         const data = await response.json();
 
         if (!response.ok) {
@@ -58,9 +61,9 @@ const CategoryPage = ({ categorySlug }) => {
           setCategoryData(categoryInfo);
 
           // Fetch products using the category ID
-          const productsResponse = await fetch(
-            `http://localhost:8000/api/products/?category_id=${categoryInfo.id}`
-          );
+          const productsResponse = await fetch(apiUrl(
+            `/api/products/?category_id=${categoryInfo.id}`
+          ));
 
           const productsData = await productsResponse.json();
 
@@ -105,13 +108,13 @@ const CategoryPage = ({ categorySlug }) => {
         formDataToSend.append("image", formData.image);
       }
 
-      const response = await fetch("http://localhost:8000/api/products/", {
+      const response = await fetch(apiUrl("/api/products/", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formDataToSend,
-      });
+      }));
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -122,7 +125,7 @@ const CategoryPage = ({ categorySlug }) => {
       const newProduct = await response.json();
       // Ensure the image URL is properly formatted
       if (newProduct.image && !newProduct.image.startsWith("http")) {
-        newProduct.image = `http://localhost:8000${newProduct.image}`;
+        newProduct.image = `${apiUrl}${newProduct.image}`;
       }
 
       setProducts([...products, newProduct]);
@@ -145,15 +148,15 @@ const CategoryPage = ({ categorySlug }) => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:8000/api/products/${productId}/`,
+      const response = await fetch(apiUrl(
+        `/api/products/${productId}/`,
         {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
+      ));
 
       if (!response.ok) {
         throw new Error("Failed to delete product");
@@ -167,7 +170,7 @@ const CategoryPage = ({ categorySlug }) => {
   };
 
   // Loading state
-  if (status === "loading") {
+  if (!isLoggedIn && !isUserAdmin) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1E3A8A]"></div>
@@ -201,7 +204,7 @@ const CategoryPage = ({ categorySlug }) => {
           <h1 className="text-2xl font-bold font-vazirmatn text-neutral-800">
             {categoryData.name}
           </h1>
-          {isAdmin && (
+          {isUserAdmin && (
             <button
               onClick={() => setIsModalOpen(true)}
               className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors font-vazirmatn text-sm"
@@ -217,7 +220,7 @@ const CategoryPage = ({ categorySlug }) => {
             <p className="text-neutral-500 mb-6 font-vazirmatn">
               محصولی در این دسته‌بندی یافت نشد.
             </p>
-            {isAdmin && (
+            {isUserAdmin && (
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors font-vazirmatn text-sm"
@@ -232,7 +235,7 @@ const CategoryPage = ({ categorySlug }) => {
               <ProductCard
                 key={product.id}
                 product={product}
-                onDelete={isAdmin ? handleDeleteProduct : null}
+                onDelete={isUserAdmin ? handleDeleteProduct : null}
               />
             ))}
           </div>

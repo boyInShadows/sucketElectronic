@@ -1,4 +1,42 @@
-const API_URL = "http://localhost:8000/api";
+// In production, use relative '' so browser hits your domain and Nginx proxies to Django.
+// In dev, fall back to your local Django on 127.0.0.1:8000.
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ??
+  (process.env.NODE_ENV === 'production' ? '' : 'http://127.0.0.1:8000');
+
+  export function getApiBase() {
+    const isServer = typeof window === 'undefined';
+    // Server code (Next route handlers / server components) should talk to Django via loopback
+    if (isServer) return process.env.INTERNAL_API_URL || 'http://127.0.0.1:8000';
+    // Browser should call the same origin so Nginx proxies /api → Django
+    return process.env.NEXT_PUBLIC_API_URL ?? '';
+  }
+
+// Always build endpoints under /api and include trailing slash (DRF needs it)
+export function apiUrl(path) {
+  const p = path.endsWith('/') ? path : `${path}/`;
+  return `${getApiBase()}/api${p}`;
+}
+
+// Auth headers helper (safe in browser and server)
+export function authHeaders() {
+  const h = { 'Content-Type': 'application/json' };
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token');
+    if (token) h.Authorization = `Bearer ${token}`;
+  }
+  return h;
+}
+
+// Optional thin wrapper
+export async function apiFetch(path, opts = {}) {
+  const r = await fetch(apiUrl(path), opts);
+  if (!r.ok) {
+    const txt = await r.text().catch(() => '');
+    throw new Error(`Request failed ${r.status}: ${txt || r.statusText}`);
+  }
+  return r.json();
+}
 
 // Helper function to handle API responses
 async function handleResponse(response) {
@@ -28,14 +66,14 @@ function getHeaders() {
 
 // Products API
 export async function fetchProducts() {
-  const res = await fetch(`${API_URL}/products/`, {
+  const res = await fetch(apiUrl("/products/"), {
     headers: getHeaders(),
   });
   return handleResponse(res);
 }
 
 export async function fetchProduct(id) {
-  const res = await fetch(`${API_URL}/products/${id}/`, {
+  const res = await fetch(apiUrl(`/products/${id}/`), {
     headers: getHeaders(),
   });
   return handleResponse(res);
@@ -43,7 +81,7 @@ export async function fetchProduct(id) {
 
 // Authentication API
 export async function login(credentials) {
-  const res = await fetch(`${API_URL}/auth/login/`, {
+  const res = await fetch(apiUrl("/auth/login/"), {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify(credentials),
@@ -53,7 +91,7 @@ export async function login(credentials) {
 
 export async function sendVerificationCode(data) {
   try {
-    const res = await fetch(`${API_URL}/auth/send-verification-code/`, {
+    const res = await fetch(apiUrl("/auth/send-verification-code/"), {
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify(data),
@@ -74,7 +112,7 @@ export async function sendVerificationCode(data) {
 
 export async function register(userData) {
   try {
-    const res = await fetch(`${API_URL}/auth/register/`, {
+    const res = await fetch(apiUrl("/auth/register/"), {
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify(userData),
@@ -95,14 +133,14 @@ export async function register(userData) {
 
 // Cart API
 export async function getCart() {
-  const res = await fetch(`${API_URL}/cart/`, {
+  const res = await fetch(apiUrl("/cart/"), {
     headers: getHeaders(),
   });
   return handleResponse(res);
 }
 
 export async function addToCart(productId, quantity = 1) {
-  const res = await fetch(`${API_URL}/cart/items/`, {
+  const res = await fetch(apiUrl("/cart/items/"), {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({ product_id: productId, quantity }),
@@ -111,7 +149,7 @@ export async function addToCart(productId, quantity = 1) {
 }
 
 export async function removeFromCart(itemId) {
-  const res = await fetch(`${API_URL}/cart/items/${itemId}/`, {
+  const res = await fetch(apiUrl(`/cart/items/${itemId}/`), {
     method: "DELETE",
     headers: getHeaders(),
   });
@@ -120,7 +158,7 @@ export async function removeFromCart(itemId) {
 
 // Order API
 export async function createOrder(orderData) {
-  const res = await fetch(`${API_URL}/orders/`, {
+  const res = await fetch(apiUrl("/orders/"), {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify(orderData),
@@ -129,7 +167,7 @@ export async function createOrder(orderData) {
 }
 
 export async function getOrders() {
-  const res = await fetch(`${API_URL}/orders/`, {
+  const res = await fetch(apiUrl("/orders/"), {
     headers: getHeaders(),
   });
   return handleResponse(res);

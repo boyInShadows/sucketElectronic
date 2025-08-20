@@ -1,4 +1,6 @@
 "use client";
+
+import { apiUrl } from "../../../libs/api";
 import React, { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
@@ -20,9 +22,9 @@ const CategoryProductComponent = ({ categories }) => {
         if (token) {
           headers["Authorization"] = `Bearer ${token}`;
         }
-        const response = await fetch("http://localhost:8000/api/categories/", {
+        const response = await fetch(apiUrl("/categories/", {
           headers,
-        });
+        }));
         if (!response.ok) throw new Error("خطا در دریافت دسته‌بندی‌ها");
         const data = await response.json();
         setCategories(data);

@@ -1,5 +1,6 @@
 "use client";
 
+import { apiUrl } from "../../../libs/api";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
@@ -37,14 +38,14 @@ const UsersPageContent = ({ token }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/users/", {
+        const response = await fetch(apiUrl("/users/", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-        });
+        }));
         if (!response.ok) {
           if (response.status === 401) {
             throw new Error("لطفا ابتدا وارد شوید");
@@ -87,8 +88,8 @@ const UsersPageContent = ({ token }) => {
   const handleSecondConfirm = async () => {
     if (!isDeleteEnabled) return;
     try {
-      const response = await fetch(
-        `http://localhost:8000/api/users/${selectedUser.id}/`,
+      const response = await fetch(apiUrl(
+        `/users/${selectedUser.id}/`,
         {
           method: "DELETE",
           headers: {
@@ -96,7 +97,7 @@ const UsersPageContent = ({ token }) => {
             "Content-Type": "application/json",
           },
         }
-      );
+      ));
       if (!response.ok) {
         throw new Error("خطا در حذف کاربر");
       }
@@ -125,12 +126,12 @@ const UsersPageContent = ({ token }) => {
     setMessagesLoading(true);
     setMessagesError("");
     try {
-      const response = await fetch("http://localhost:8000/api/messages/", {
+      const response = await fetch(apiUrl("/messages/", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      });
+      }));
       if (!response.ok) {
         throw new Error("خطا در دریافت پیام‌ها");
       }
@@ -153,8 +154,8 @@ const UsersPageContent = ({ token }) => {
       if (typeof window === "undefined") return;
       const shouldDelete = window.confirm("آیا از حذف این پیام اطمینان دارید؟");
       if (!shouldDelete) return;
-      const response = await fetch(
-        `http://localhost:8000/api/messages/${id}/`,
+      const response = await fetch(apiUrl(
+        `/messages/${id}/`,
         {
           method: "DELETE",
           headers: {
@@ -162,7 +163,7 @@ const UsersPageContent = ({ token }) => {
             "Content-Type": "application/json",
           },
         }
-      );
+      ));
       if (!response.ok) throw new Error("خطا در حذف پیام");
       setMessages(messages.filter((msg) => msg.id !== id));
       setDeleteConfirmId(null);

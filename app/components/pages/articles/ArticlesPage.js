@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Trash2, X, ChevronDown, ChevronUp } from "lucide-react";
 
-const API_URL = "http://localhost:8000/api/articles/";
+const API_URL = "/articles/";
 
 const ArticlesPage = () => {
   const [articles, setArticles] = useState([]);

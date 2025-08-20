@@ -1,4 +1,6 @@
 "use client";
+
+import { apiUrl } from "../../libs/api";
 import React, { useState, useEffect, useCallback } from "react";
 import Articles from "./articles";
 import SideNav from "./sideNav";
@@ -55,7 +57,7 @@ const Main = () => {
   useEffect(() => {
     const fetchLatestProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/products/");
+        const response = await fetch(apiUrl("/products/"));
         if (!response.ok) throw new Error("خطا در دریافت محصولات جدید");
         const data = await response.json();
         const latest = data.slice(0, 4);
@@ -79,9 +81,9 @@ const Main = () => {
         if (token) {
           headers["Authorization"] = `Bearer ${token}`;
         }
-        const response = await fetch("http://localhost:8000/api/categories/", {
+        const response = await fetch(apiUrl("/categories/", {
           headers,
-        });
+        }));
         if (!response.ok) throw new Error("خطا در دریافت دسته‌بندی‌ها");
         const data = await response.json();
         setCategories(data);

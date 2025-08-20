@@ -41,3 +41,21 @@ export const isAdmin = () => {
   if (typeof window === "undefined") return false;
   return localStorage.getItem("is_admin") === "true";
 };
+
+// Debug function to check authentication state
+export const debugAuthState = () => {
+  if (typeof window === "undefined") return "Server side";
+  
+  const token = localStorage.getItem("token");
+  const isAdmin = localStorage.getItem("is_admin");
+  const username = localStorage.getItem("username");
+  
+  console.log("=== AUTH DEBUG ===");
+  console.log("Token exists:", !!token);
+  console.log("Token length:", token ? token.length : 0);
+  console.log("Username:", username);
+  console.log("Is Admin:", isAdmin);
+  console.log("==================");
+  
+  return { token: !!token, isAdmin, username };
+};

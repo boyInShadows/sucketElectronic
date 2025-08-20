@@ -1,4 +1,6 @@
 "use client";
+
+import { apiUrl } from "../../../libs/api";
 import React, { useState, useEffect } from "react";
 import {
   Search,
@@ -9,15 +11,12 @@ import {
   Package,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
+import { isAuthenticated, isAdmin } from "../../../libs/auth";
 import Link from "next/link";
 import CardProductComponent from "@/app/components/main/products/cartProductComponent";
 
 const CategoryCard = ({ category, onDelete }) => {
-  const isAdmin =
-    typeof window !== "undefined"
-      ? localStorage.getItem("is_admin") === "true"
-      : false;
+  const isAdmin = isAdmin();
   const [isDeleting, setIsDeleting] = useState(false);
   const productCount = category.productsCount || category.products?.length || 0;
   const previewProducts = category.products?.slice(0, 3) || [];
@@ -104,11 +103,13 @@ const CategoryCard = ({ category, onDelete }) => {
 };
 
 const ProductsPage = () => {
-  const { data: session } = useSession();
-  const isAdmin =
-    typeof window !== "undefined"
-      ? localStorage.getItem("is_admin") === "true"
-      : false;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated());
+    setIsUserAdmin(isAdmin());
+  }, []);
   const [categories, setCategories] = useState([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategory, setNewCategory] = useState({ name: "" });
@@ -133,9 +134,9 @@ const ProductsPage = () => {
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       }
-      const response = await fetch("http://localhost:8000/api/categories/", {
+      const response = await fetch(apiUrl("/categories/", {
         headers,
-      });
+      }));
 
       let data = {};
       try {
@@ -158,8 +159,8 @@ const ProductsPage = () => {
     try {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const response = await fetch(
-        `http://localhost:8000/api/categories/${categoryId}/`,
+      const response = await fetch(apiUrl(
+        `/categories/${categoryId}/`,
         {
           method: "DELETE",
           headers: {
@@ -167,7 +168,7 @@ const ProductsPage = () => {
             "Content-Type": "application/json",
           },
         }
-      );
+      ));
 
       let errorData = {};
       try {
@@ -207,14 +208,14 @@ const ProductsPage = () => {
     try {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const response = await fetch("http://localhost:8000/api/categories/", {
+      const response = await fetch(apiUrl("/categories/", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newCategory),
-      });
+      }));
 
       let data = {};
       try {
@@ -257,11 +258,11 @@ const ProductsPage = () => {
       }
       setSearchLoading(true);
       setSearchError("");
-      fetch(
-        `http://localhost:8000/api/products/?search=${encodeURIComponent(
+      fetch(apiUrl(
+        `/products/?search=${encodeURIComponent(
           search
         )}`
-      )
+      ))
         .then(async (res) => {
           let data = {};
           try {
@@ -387,7 +388,7 @@ const ProductsPage = () => {
               />
             ))}
             {/* Add New Category Button - Only visible to superusers */}
-            {isAdmin && (
+            {isUserAdmin && (
               <motion.button
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}

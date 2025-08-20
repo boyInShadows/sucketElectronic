@@ -25,11 +25,27 @@ const Login = () => {
 
     try {
       const response = await login(formData);
+      
+      // Debug: Log the response to see the structure
+      console.log("Login response:", response);
+      console.log("User object:", response.user);
+      
       // Store auth state using the utility function
+      // Check for different possible admin field names from Django
+      const isAdmin = response.user?.is_admin || 
+                     response.user?.is_superuser || 
+                     response.user?.is_staff || 
+                     response.is_admin || 
+                     response.is_superuser || 
+                     response.is_staff || 
+                     false;
+      
+      console.log("Detected admin status:", isAdmin);
+      
       setAuthState(
         response.access,
         formData.username,
-        response.user?.is_admin || false
+        isAdmin
       );
 
       // Show welcome popup

@@ -1,9 +1,10 @@
 "use client";
+
+import { apiUrl } from "../../../libs/api";
 import React, { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const API_URL = "http://localhost:8000/api/articles/";
 
 const Articles = () => {
   const [articles, setArticles] = useState([]);
@@ -16,7 +17,7 @@ const Articles = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(API_URL);
+        const res = await fetch(apiUrl("/articles/"));
         if (!res.ok) throw new Error("خطا در دریافت مقالات");
         const data = await res.json();
         setArticles(data.slice(0, 4)); // Show only the latest 4

@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 
 export async function GET(request) {
   try {
+    const DJANGO_INTERNAL_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
     const { searchParams } = new URL(request.url);
     const category_id = searchParams.get("category_id");
 
     // Make request to Django backend
-    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/products/`);
+    const url = new URL(`${DJANGO_INTERNAL_URL}/api/products/`);
     if (category_id) {
       url.searchParams.append("category_id", category_id);
     }
