@@ -16,7 +16,7 @@ import Link from "next/link";
 import CardProductComponent from "@/app/components/main/products/cartProductComponent";
 
 const CategoryCard = ({ category, onDelete }) => {
-  const isAdmin = isAdmin();
+  const isUserAdmin = isAdmin();
   const [isDeleting, setIsDeleting] = useState(false);
   const productCount = category.productsCount || category.products?.length || 0;
   const previewProducts = category.products?.slice(0, 3) || [];
@@ -25,6 +25,9 @@ const CategoryCard = ({ category, onDelete }) => {
   if (!category?.slug) {
     return null;
   }
+
+  // the problem is from how we get our categories, maybe we calling the wrong api, how can we findout which categories could related to our categoryCard component on products page ?
+
 
   const handleDelete = async (e) => {
     e.preventDefault();
@@ -43,7 +46,7 @@ const CategoryCard = ({ category, onDelete }) => {
   };
 
   return (
-    <Link href={`/products/${encodeURIComponent(category.slug)}`}>
+    <Link href={`/categories/${encodeURIComponent(category.slug)}`}>
       <motion.div
         whileHover={{
           scale: 1.03,
@@ -57,7 +60,7 @@ const CategoryCard = ({ category, onDelete }) => {
           {productCount} محصول
         </span>
         {/* Delete button for admin */}
-        {isAdmin && (
+        {isUserAdmin && (
           <button
             onClick={handleDelete}
             disabled={isDeleting}
@@ -126,32 +129,80 @@ const ProductsPage = () => {
 
   const fetchCategories = async () => {
     try {
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const headers = {
         "Content-Type": "application/json",
       };
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-      const response = await fetch(apiUrl("/categories/", {
-        headers,
-      }));
-
+      
+// Check if token exists and is valid
+if (!token) {
+  console.warn("⚠️ No authentication token found");
+  // You might still want to fetch categories if they're public
+} else {
+  headers["Authorization"] = `Bearer ${token}`;
+}
+      
+      const apiEndpoint = apiUrl("/categories/"); // Added /api/ prefix
+      console.log("🔍 Fetching categories from:", apiEndpoint);
+      
+      const response = await fetch(apiEndpoint, { headers });
+      
+      console.log("🔍 Response status:", response.status);
+      console.log("🔍 Response status text:", response.statusText);
+      
+      // Get response text first to see what we're working with
+      const rawResponse = await response.text();
+      console.log("🔍 Raw response:", rawResponse);
+      
       let data = {};
       try {
-        data = await response.json();
-      } catch {}
-
-      if (!response.ok) {
-        throw new Error(data.detail || "خطای ناشناخته‌ای رخ داده است.");
+        data = JSON.parse(rawResponse);
+        console.log("🔍 Parsed data structure:", data);
+        console.log("🔍 Is array?", Array.isArray(data));
+        
+        // Check for common API response structures
+        if (data.results) {
+          console.log("🔍 Found 'results' property:", data.results);
+        }
+        if (data.data) {
+          console.log("🔍 Found 'data' property:", data.data);
+        }
+        if (data.items) {
+          console.log("🔍 Found 'items' property:", data.items);
+        }
+        
+      } catch (parseError) {
+        console.error("🔍 JSON parse error:", parseError);
+        throw new Error("Invalid JSON response from server");
       }
-
-      setCategories(data);
+  
+      if (!response.ok) {
+        throw new Error(data.detail || data.message || `Server error: ${response.status}`);
+      }
+  
+      // Handle different API response structures
+      let categoriesData = data;
+      
+      if (Array.isArray(data)) {
+        // Direct array response
+        categoriesData = data;
+      } else if (data.results && Array.isArray(data.results)) {
+        // Paginated response (Django REST framework style)
+        categoriesData = data.results;
+      } else if (data.data && Array.isArray(data.data)) {
+        // Custom API response structure
+        categoriesData = data.data;
+      } else if (data.items && Array.isArray(data.items)) {
+        // Another common structure
+        categoriesData = data.items;
+      }
+      
+      console.log("🔍 Final categories data to set:", categoriesData);
+      setCategories(categoriesData);
+      
     } catch (err) {
-      setError(
-        err.message || "ارتباط با سرور برقرار نشد. لطفا دوباره تلاش کنید."
-      );
+      console.error("🔍 Error fetching categories:", err);
+      setError(err.message || "ارتباط با سرور برقرار نشد. لطفا دوباره تلاش کنید.");
     }
   };
 

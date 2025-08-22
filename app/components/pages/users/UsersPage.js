@@ -491,7 +491,7 @@ const UsersPage = () => {
                           )}
                           {localRead[msg.id]
                             ? "خوانده شد"
-                            : "علامت خوانده نشده"}
+                            : "در انتظار خوانده شدن"}
                         </button>
                         <button
                           onClick={() => setDeleteConfirmId(msg.id)}

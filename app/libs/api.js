@@ -15,7 +15,15 @@ export const API_BASE =
 // Always build endpoints under /api and include trailing slash (DRF needs it)
 export function apiUrl(path) {
   const p = path.endsWith('/') ? path : `${path}/`;
-  return `${getApiBase()}/api${p}`;
+  const base = getApiBase();
+  const fullUrl = `${base}/api${p}`;
+  
+  // Debug: Log the API URL being generated
+  if (typeof window !== 'undefined') {
+    console.log(`🔍 apiUrl(${path}) -> ${fullUrl} (base: ${base})`);
+  }
+  
+  return fullUrl;
 }
 
 // Auth headers helper (safe in browser and server)

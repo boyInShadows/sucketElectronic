@@ -2,8 +2,34 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Trash2, X, ChevronDown, ChevronUp } from "lucide-react";
+import { apiUrl } from "../../../libs/api";
 
-const API_URL = "/articles/";
+// Helper function to get full image URL
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  
+  console.log("getImageUrl input:", imagePath);
+  
+  // If it's already a full URL, return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    console.log("getImageUrl: Full URL detected, returning as is");
+    return imagePath;
+  }
+  
+  // If it's a relative path starting with /, prepend the API base URL with /media
+  if (imagePath.startsWith('/')) {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://omidelectronicazizkhani.ir';
+    const fullUrl = `${baseUrl}/media${imagePath}`;
+    console.log("getImageUrl: Relative path with /, returning:", fullUrl);
+    return fullUrl;
+  }
+  
+  // If it's a relative path without /, prepend the API base URL with /media/
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://omidelectronicazizkhani.ir';
+  const fullUrl = `${baseUrl}/media/${imagePath}`;
+  console.log("getImageUrl: Relative path without /, returning:", fullUrl);
+  return fullUrl;
+};
 
 const ArticlesPage = () => {
   const [articles, setArticles] = useState([]);
@@ -29,9 +55,11 @@ const ArticlesPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(API_URL);
+      const res = await fetch(apiUrl("/articles/"));
       if (!res.ok) throw new Error("خطا در دریافت مقالات");
       const data = await res.json();
+      console.log("Articles data received:", data);
+      console.log("First article image:", data[0]?.image);
       setArticles(data);
     } catch (err) {
       setError(err.message);
@@ -69,7 +97,7 @@ const ArticlesPage = () => {
       formData.append("title", form.title);
       if (form.image) formData.append("image", form.image);
       formData.append("description", form.description);
-      const res = await fetch(API_URL, {
+      const res = await fetch(apiUrl("/articles/"), {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData,
@@ -90,7 +118,7 @@ const ArticlesPage = () => {
     setDeleteError(null);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${API_URL}${id}/`, {
+      const res = await fetch(apiUrl(`/articles/${id}/`), {
         method: "DELETE",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
@@ -258,7 +286,7 @@ const ArticlesPage = () => {
                   {article.image && (
                     <div className="relative h-48 overflow-hidden rounded-b-xl">
                       <img
-                        src={article.image}
+                        src={getImageUrl(article.image)}
                         alt={article.title}
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
                       />
@@ -313,7 +341,7 @@ const ArticlesPage = () => {
               {selectedArticle.image && (
                 <div className="w-full h-40 sm:h-56 md:h-64 bg-neutral-100 relative overflow-hidden">
                   <img
-                    src={selectedArticle.image}
+                    src={getImageUrl(selectedArticle.image)}
                     alt={selectedArticle.title}
                     className="w-full h-full object-cover"
                   />

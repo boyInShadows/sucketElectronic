@@ -33,13 +33,13 @@ const ContactUsComponent = () => {
     setSuccess("");
 
     try {
-      const response = await fetch(apiUrl("/messages/", {
+      const response = await fetch(apiUrl("/messages/"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      }));
+      });
 
       const data = await response.json();
 
