@@ -46,7 +46,7 @@ const CategoryCard = ({ category, onDelete }) => {
   };
 
   return (
-    <Link href={`/categories/${encodeURIComponent(category.slug)}`}>
+    <Link href={`/products/${encodeURIComponent(category.slug)}`}>
       <motion.div
         whileHover={{
           scale: 1.03,
@@ -210,30 +210,36 @@ if (!token) {
     try {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const response = await fetch(apiUrl(
-        `/categories/${categoryId}/`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      ));
+      const apiEndpoint = apiUrl(`/categories/${categoryId}/`);
+      console.log("🔍 DELETE request to:", apiEndpoint);
+      
+      const response = await fetch(apiEndpoint, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
+      console.log("🔍 Delete response status:", response.status);
+      console.log("🔍 Delete response headers:", Object.fromEntries(response.headers.entries()));
+      
       let errorData = {};
       try {
         errorData = await response.json();
-      } catch {}
+        console.log("🔍 Delete response data:", errorData);
+      } catch (parseError) {
+        console.log("🔍 No JSON response body for DELETE request");
+      }
 
       if (!response.ok) {
         throw new Error(errorData.detail || "خطا در حذف دسته‌بندی");
       }
 
-      // Remove the deleted category from the state
-      setCategories(
-        categories.filter((category) => category.id !== categoryId)
-      );
+      console.log("🔍 Category deleted successfully, refreshing list...");
+      
+      // Refresh the categories list from the server to ensure consistency
+      await fetchCategories();
     } catch (err) {
       setError(
         err.message || "ارتباط با سرور برقرار نشد. لطفا دوباره تلاش کنید."
@@ -259,19 +265,33 @@ if (!token) {
     try {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const response = await fetch(apiUrl("/categories/", {
+      
+      console.log("🔍 Creating category with data:", newCategory);
+      console.log("🔍 Using token:", token ? token.substring(0, 20) + "..." : "NO_TOKEN");
+      
+      const apiEndpoint = apiUrl("/categories/");
+      console.log("🔍 POST request to:", apiEndpoint);
+      
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newCategory),
-      }));
+      });
 
       let data = {};
       try {
         data = await response.json();
-      } catch {}
+        console.log("🔍 Category creation response data:", data);
+        console.log("🔍 Response status:", response.status);
+        console.log("🔍 Response headers:", Object.fromEntries(response.headers.entries()));
+      } catch (parseError) {
+        console.error("🔍 Failed to parse category creation response:", parseError);
+        const textResponse = await response.text();
+        console.log("🔍 Raw response text:", textResponse);
+      }
 
       if (!response.ok) {
         if (response.status === 400) {
@@ -287,10 +307,19 @@ if (!token) {
         }
       }
 
-      setCategories([...categories, data]);
-      setShowAddCategory(false);
-      setNewCategory({ name: "" });
-      setError("");
+      // After successfully creating a category, redirect to the new category page
+      // This provides better UX by taking the user directly to where they can add products
+      if (data && data.slug) {
+        console.log("🔍 Redirecting to new category:", data.slug);
+        window.location.href = `/products/${encodeURIComponent(data.slug)}`;
+      } else {
+        // Fallback: refresh the categories list if no slug available
+        console.log("🔍 No slug in response, refreshing categories list");
+        await fetchCategories();
+        setShowAddCategory(false);
+        setNewCategory({ name: "" });
+        setError("");
+      }
     } catch (err) {
       setError(
         err.message || "ارتباط با سرور برقرار نشد. لطفا دوباره تلاش کنید."

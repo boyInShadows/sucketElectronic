@@ -40,11 +40,44 @@ const CategoryPage = ({ categorySlug }) => {
     const fetchData = async () => {
       if (!categorySlug) return;
 
+      console.log("🔍 ===== CATEGORY PAGE DEBUG =====");
+      console.log("🔍 Category slug received:", categorySlug);
+      console.log("🔍 Category slug type:", typeof categorySlug);
+      console.log("🔍 Category slug length:", categorySlug.length);
+      console.log("🔍 Category slug raw:", JSON.stringify(categorySlug));
+      
       try {
-        const response = await fetch(apiUrl(
-          `/categories/?slug=${categorySlug}`
-        ));
+        // First, let's see what categories exist in the database
+        const allCategoriesUrl = apiUrl('/categories/');
+        console.log("🔍 Fetching all categories from:", allCategoriesUrl);
+        
+        const allCategoriesResponse = await fetch(allCategoriesUrl);
+        const allCategoriesData = await allCategoriesResponse.json();
+        console.log("🔍 All categories in database:", allCategoriesData);
+        console.log("🔍 Total categories found:", Array.isArray(allCategoriesData) ? allCategoriesData.length : 'Not an array');
+        
+        // Now let's look for the specific slug
+        // Fix: Don't use apiUrl for query parameters as it adds trailing slash
+        const baseUrl = apiUrl('/categories/').replace(/\/$/, ''); // Remove trailing slash
+        const categoriesUrl = `${baseUrl}?slug=${categorySlug}`;
+        console.log("🔍 Categories API URL:", categoriesUrl);
+        console.log("🔍 Looking for slug:", categorySlug);
+        console.log("🔍 Encoded slug:", encodeURIComponent(categorySlug));
+        
+        const response = await fetch(categoriesUrl);
+        console.log("🔍 Categories response status:", response.status);
+        console.log("🔍 Categories response headers:", Object.fromEntries(response.headers.entries()));
+        
         const data = await response.json();
+        console.log("🔍 Categories data received:", data);
+        console.log("🔍 Data type:", typeof data);
+        console.log("🔍 Is array:", Array.isArray(data));
+        console.log("🔍 Data length:", Array.isArray(data) ? data.length : 'Not an array');
+        
+        // Debug: Check if the slug exists in all categories
+        const matchingCategory = allCategoriesData.find(cat => cat.slug === categorySlug);
+        console.log("🔍 Matching category found:", matchingCategory);
+        console.log("🔍 All category slugs:", allCategoriesData.map(cat => cat.slug));
 
         if (!response.ok) {
           throw new Error(
@@ -59,13 +92,17 @@ const CategoryPage = ({ categorySlug }) => {
 
         if (categoryInfo) {
           setCategoryData(categoryInfo);
+          console.log("🔍 Found category:", categoryInfo);
 
           // Fetch products using the category ID
-          const productsResponse = await fetch(apiUrl(
-            `/api/products/?category_id=${categoryInfo.id}`
-          ));
-
+          const productsUrl = apiUrl(`/products/?category_id=${categoryInfo.id}`);
+          console.log("🔍 Products API URL:", productsUrl);
+          
+          const productsResponse = await fetch(productsUrl);
+          console.log("🔍 Products response status:", productsResponse.status);
+          
           const productsData = await productsResponse.json();
+          console.log("🔍 Products data received:", productsData);
 
           if (!productsResponse.ok) {
             throw new Error(productsData.error || "Failed to fetch products");
@@ -108,13 +145,13 @@ const CategoryPage = ({ categorySlug }) => {
         formDataToSend.append("image", formData.image);
       }
 
-      const response = await fetch(apiUrl("/api/products/", {
+      const response = await fetch(apiUrl("/products/"), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formDataToSend,
-      }));
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -125,7 +162,8 @@ const CategoryPage = ({ categorySlug }) => {
       const newProduct = await response.json();
       // Ensure the image URL is properly formatted
       if (newProduct.image && !newProduct.image.startsWith("http")) {
-        newProduct.image = `${apiUrl}${newProduct.image}`;
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://omidelectronicazizkhani.ir';
+        newProduct.image = `${baseUrl}/media${newProduct.image}`;
       }
 
       setProducts([...products, newProduct]);
