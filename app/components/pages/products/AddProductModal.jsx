@@ -86,12 +86,27 @@ const AddProductModal = ({
             </label>
             <input
               type="file"
-              onChange={(e) =>
-                setFormData({ ...formData, image: e.target.files[0] })
-              }
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  // Check file size (5MB = 5 * 1024 * 1024 bytes)
+                  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                  
+                  if (file.size > maxSize) {
+                    alert("سایز عکس نباید بیشتر از 5 مگابایت باشد");
+                    e.target.value = ''; // Clear the input
+                    return;
+                  }
+                }
+                
+                setFormData({ ...formData, image: file });
+              }}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#1E3A8A] font-vazirmatn"
               accept="image/*"
             />
+            <p className="text-xs text-gray-500 mt-1 font-vazirmatn">
+              حداکثر سایز: 5 مگابایت
+            </p>
           </div>
 
           <div className="flex justify-end gap-4">

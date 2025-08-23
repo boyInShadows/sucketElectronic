@@ -47,10 +47,10 @@ const FooterPart = () => {
       icon: <Mail className="w-4 h-4 sm:w-5 sm:h-5" />,
       text: "zyzzyzkhany@gmail.com",
     },
-    {
-      icon: <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />,
-      text: "تهران، خیابان ولیعصر، پلاک ۱۲۳",
-    },
+    // {
+    //   icon: <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />,
+    //   text: "تهران، خیابان ولیعصر، پلاک ۱۲۳",
+    // },
   ];
 
   return (

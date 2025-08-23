@@ -162,12 +162,12 @@ const Login = () => {
 
             {/* Links */}
             <div className="flex justify-between text-sm">
-              <Link
+              {/* <Link
                 href="/forgotPassword"
                 className="text-primary hover:text-primary/80 transition-colors duration-300"
               >
                 فراموشی رمز عبور
-              </Link>
+              </Link> */}
               <Link
                 href="/signup"
                 className="text-primary hover:text-primary/80 transition-colors duration-300"

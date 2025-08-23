@@ -57,9 +57,8 @@ const CategoryPage = ({ categorySlug }) => {
         console.log("🔍 Total categories found:", Array.isArray(allCategoriesData) ? allCategoriesData.length : 'Not an array');
         
         // Now let's look for the specific slug
-        // Fix: Don't use apiUrl for query parameters as it adds trailing slash
-        const baseUrl = apiUrl('/categories/').replace(/\/$/, ''); // Remove trailing slash
-        const categoriesUrl = `${baseUrl}?slug=${categorySlug}`;
+        // Fix: Use the correct URL format that Django expects
+        const categoriesUrl = `${apiUrl('/categories/')}?slug=${categorySlug}`;
         console.log("🔍 Categories API URL:", categoriesUrl);
         console.log("🔍 Looking for slug:", categorySlug);
         console.log("🔍 Encoded slug:", encodeURIComponent(categorySlug));
@@ -97,12 +96,17 @@ const CategoryPage = ({ categorySlug }) => {
           // Fetch products using the category ID
           const productsUrl = apiUrl(`/products/?category_id=${categoryInfo.id}`);
           console.log("🔍 Products API URL:", productsUrl);
+          console.log("🔍 Fetching products for category ID:", categoryInfo.id);
           
           const productsResponse = await fetch(productsUrl);
           console.log("🔍 Products response status:", productsResponse.status);
+          console.log("🔍 Products response headers:", Object.fromEntries(productsResponse.headers.entries()));
           
           const productsData = await productsResponse.json();
           console.log("🔍 Products data received:", productsData);
+          console.log("🔍 Products data type:", typeof productsData);
+          console.log("🔍 Products is array:", Array.isArray(productsData));
+          console.log("🔍 Products count:", Array.isArray(productsData) ? productsData.length : 'Not an array');
 
           if (!productsResponse.ok) {
             throw new Error(productsData.error || "Failed to fetch products");
@@ -186,21 +190,34 @@ const CategoryPage = ({ categorySlug }) => {
     }
 
     try {
-      const response = await fetch(apiUrl(
-        `/api/products/${productId}/`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      ));
+      const response = await fetch(apiUrl(`/products/${productId}/`), {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to delete product");
       }
 
-      setProducts(products.filter((p) => p.id !== productId));
+      // After successful deletion, refresh the products list from the server
+      // This ensures the local state matches what's actually in the database
+      if (categoryData) {
+        const productsUrl = apiUrl(`/products/?category_id=${categoryData.id}`);
+        const productsResponse = await fetch(productsUrl);
+        
+        if (productsResponse.ok) {
+          const productsData = await productsResponse.json();
+          setProducts(Array.isArray(productsData) ? productsData : []);
+        } else {
+          // If refresh fails, fall back to local state update
+          setProducts(products.filter((p) => p.id !== productId));
+        }
+      } else {
+        // Fallback if no category data
+        setProducts(products.filter((p) => p.id !== productId));
+      }
     } catch (error) {
       console.error("Error deleting product:", error);
       setError(error.message);
@@ -253,7 +270,23 @@ const CategoryPage = ({ categorySlug }) => {
         </div>
 
         {/* Products Grid */}
-        {products.length === 0 ? (
+        {!categoryData ? (
+          // No category found - show add category button
+          <div className="text-center py-12 bg-neutral-50 rounded-lg">
+            <p className="text-neutral-500 mb-6 font-vazirmatn">
+              دسته‌بندی یافت نشد.
+            </p>
+            {isUserAdmin && (
+              <button
+                onClick={() => window.location.href = '/products'}
+                className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors font-vazirmatn text-sm"
+              >
+                بازگشت به صفحه دسته‌بندی‌ها
+              </button>
+            )}
+          </div>
+        ) : products.length === 0 ? (
+          // Category exists but no products - show add product button
           <div className="text-center py-12 bg-neutral-50 rounded-lg">
             <p className="text-neutral-500 mb-6 font-vazirmatn">
               محصولی در این دسته‌بندی یافت نشد.
@@ -268,6 +301,7 @@ const CategoryPage = ({ categorySlug }) => {
             )}
           </div>
         ) : (
+          // Category and products exist - show products grid
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
               <ProductCard

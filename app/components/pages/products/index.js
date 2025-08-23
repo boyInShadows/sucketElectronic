@@ -454,9 +454,22 @@ if (!token) {
             <p className="text-lg text-neutral-500 mb-2">
               هیچ دسته‌بندی‌ای یافت نشد
             </p>
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-neutral-400 mb-6">
               دسته‌بندی جدیدی اضافه کنید یا جستجوی خود را تغییر دهید.
             </p>
+            {/* Add Category Button for admins when no categories exist */}
+            {isUserAdmin && (
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setShowAddCategory(true)}
+                className="bg-gradient-to-br from-primary/90 to-blue-500 text-white rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer flex items-center gap-3 border-2 border-primary/30 hover:border-accent group"
+                title="افزودن دسته‌بندی جدید"
+              >
+                <PlusCircle className="w-6 h-6 text-white drop-shadow" />
+                <span className="font-bold">افزودن دسته‌بندی جدید</span>
+              </motion.button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

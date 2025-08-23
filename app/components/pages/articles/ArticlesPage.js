@@ -80,10 +80,28 @@ const ArticlesPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+    
+    if (files && files[0]) {
+      const file = files[0];
+      // Check file size (5MB = 5 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      
+      if (file.size > maxSize) {
+        setFormError("سایز عکس نباید بیشتر از 5 مگابایت باشد");
+        return;
+      }
+      
+      setForm((prev) => ({
+        ...prev,
+        [name]: file,
+      }));
+      setFormError(null); // Clear any previous errors
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {

@@ -14,9 +14,17 @@ export const API_BASE =
 
 // Always build endpoints under /api and include trailing slash (DRF needs it)
 export function apiUrl(path) {
-  const p = path.endsWith('/') ? path : `${path}/`;
+  // Split path and query parameters
+  const [pathPart, queryPart] = path.split('?');
+  
+  // Add trailing slash only to the path part (not after query parameters)
+  const p = pathPart.endsWith('/') ? pathPart : `${pathPart}/`;
+  
+  // Reconstruct the full path with query parameters
+  const fullPath = queryPart ? `${p}?${queryPart}` : p;
+  
   const base = getApiBase();
-  const fullUrl = `${base}/api${p}`;
+  const fullUrl = `${base}/api${fullPath}`;
   
   // Debug: Log the API URL being generated
   if (typeof window !== 'undefined') {
