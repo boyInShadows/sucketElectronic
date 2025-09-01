@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
 const SectionLoading = ({ isLoading, error, onRetry, size = "30", className = "", showError = true }) => {
