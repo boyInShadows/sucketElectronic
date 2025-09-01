@@ -136,43 +136,41 @@ const ProductsPage = () => {
       
 // Check if token exists and is valid
 if (!token) {
-  console.warn("⚠️ No authentication token found");
+          console.warn("No authentication token found");
   // You might still want to fetch categories if they're public
 } else {
   headers["Authorization"] = `Bearer ${token}`;
 }
       
       const apiEndpoint = apiUrl("/categories/"); // Added /api/ prefix
-      console.log("🔍 Fetching categories from:", apiEndpoint);
+  
       
       const response = await fetch(apiEndpoint, { headers });
       
-      console.log("🔍 Response status:", response.status);
-      console.log("🔍 Response status text:", response.statusText);
+      
       
       // Get response text first to see what we're working with
       const rawResponse = await response.text();
-      console.log("🔍 Raw response:", rawResponse);
+      
       
       let data = {};
       try {
         data = JSON.parse(rawResponse);
-        console.log("🔍 Parsed data structure:", data);
-        console.log("🔍 Is array?", Array.isArray(data));
+
         
         // Check for common API response structures
         if (data.results) {
-          console.log("🔍 Found 'results' property:", data.results);
+
         }
         if (data.data) {
-          console.log("🔍 Found 'data' property:", data.data);
+
         }
         if (data.items) {
-          console.log("🔍 Found 'items' property:", data.items);
+
         }
         
       } catch (parseError) {
-        console.error("🔍 JSON parse error:", parseError);
+        console.error("JSON parse error:", parseError);
         throw new Error("Invalid JSON response from server");
       }
   
@@ -197,11 +195,11 @@ if (!token) {
         categoriesData = data.items;
       }
       
-      console.log("🔍 Final categories data to set:", categoriesData);
+      
       setCategories(categoriesData);
       
     } catch (err) {
-      console.error("🔍 Error fetching categories:", err);
+              console.error("Error fetching categories:", err);
       setError(err.message || "ارتباط با سرور برقرار نشد. لطفا دوباره تلاش کنید.");
     }
   };
@@ -211,7 +209,7 @@ if (!token) {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
       const apiEndpoint = apiUrl(`/categories/${categoryId}/`);
-      console.log("🔍 DELETE request to:", apiEndpoint);
+      
       
       const response = await fetch(apiEndpoint, {
         method: "DELETE",
@@ -221,22 +219,21 @@ if (!token) {
         },
       });
 
-      console.log("🔍 Delete response status:", response.status);
-      console.log("🔍 Delete response headers:", Object.fromEntries(response.headers.entries()));
+      
       
       let errorData = {};
       try {
         errorData = await response.json();
-        console.log("🔍 Delete response data:", errorData);
+        
       } catch (parseError) {
-        console.log("🔍 No JSON response body for DELETE request");
+        
       }
 
       if (!response.ok) {
         throw new Error(errorData.detail || "خطا در حذف دسته‌بندی");
       }
 
-      console.log("🔍 Category deleted successfully, refreshing list...");
+      
       
       // Refresh the categories list from the server to ensure consistency
       await fetchCategories();
@@ -266,11 +263,10 @@ if (!token) {
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
       
-      console.log("🔍 Creating category with data:", newCategory);
-      console.log("🔍 Using token:", token ? token.substring(0, 20) + "..." : "NO_TOKEN");
+      
       
       const apiEndpoint = apiUrl("/categories/");
-      console.log("🔍 POST request to:", apiEndpoint);
+      
       
       const response = await fetch(apiEndpoint, {
         method: "POST",
@@ -284,13 +280,11 @@ if (!token) {
       let data = {};
       try {
         data = await response.json();
-        console.log("🔍 Category creation response data:", data);
-        console.log("🔍 Response status:", response.status);
-        console.log("🔍 Response headers:", Object.fromEntries(response.headers.entries()));
+
       } catch (parseError) {
-        console.error("🔍 Failed to parse category creation response:", parseError);
+        console.error("Failed to parse category creation response:", parseError);
         const textResponse = await response.text();
-        console.log("🔍 Raw response text:", textResponse);
+        
       }
 
       if (!response.ok) {
@@ -310,11 +304,11 @@ if (!token) {
       // After successfully creating a category, redirect to the new category page
       // This provides better UX by taking the user directly to where they can add products
       if (data && data.slug) {
-        console.log("🔍 Redirecting to new category:", data.slug);
+
         window.location.href = `/products/${encodeURIComponent(data.slug)}`;
       } else {
         // Fallback: refresh the categories list if no slug available
-        console.log("🔍 No slug in response, refreshing categories list");
+        
         await fetchCategories();
         setShowAddCategory(false);
         setNewCategory({ name: "" });

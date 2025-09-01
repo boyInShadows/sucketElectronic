@@ -8,11 +8,11 @@ import { apiUrl } from "../../../libs/api";
 const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
   
-  console.log("getImageUrl input:", imagePath);
+
   
   // If it's already a full URL, return as is
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    console.log("getImageUrl: Full URL detected, returning as is");
+
     return imagePath;
   }
   
@@ -20,14 +20,14 @@ const getImageUrl = (imagePath) => {
   if (imagePath.startsWith('/')) {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://omidelectronicazizkhani.ir';
     const fullUrl = `${baseUrl}/media${imagePath}`;
-    console.log("getImageUrl: Relative path with /, returning:", fullUrl);
+
     return fullUrl;
   }
   
   // If it's a relative path without /, prepend the API base URL with /media/
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://omidelectronicazizkhani.ir';
   const fullUrl = `${baseUrl}/media/${imagePath}`;
-  console.log("getImageUrl: Relative path without /, returning:", fullUrl);
+  
   return fullUrl;
 };
 
@@ -58,8 +58,7 @@ const ArticlesPage = () => {
       const res = await fetch(apiUrl("/articles/"));
       if (!res.ok) throw new Error("خطا در دریافت مقالات");
       const data = await res.json();
-      console.log("Articles data received:", data);
-      console.log("First article image:", data[0]?.image);
+
       setArticles(data);
     } catch (err) {
       setError(err.message);

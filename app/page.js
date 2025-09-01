@@ -17,7 +17,7 @@ export default function Home() {
 
       {/* Main Content Section */}
       <main className="flex-1 w-full">
-        <div className=" mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className=" mx-auto px-4 xs:px-3 sm:px-4 md:6 lg:px-8 xl:px-10 2xl:px-12">
           <Main />
         </div>
       </main>

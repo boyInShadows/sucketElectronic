@@ -17,8 +17,10 @@ import {
   User as UserIcon,
   Phone,
   Info,
+  AlertTriangle,
 } from "lucide-react";
-import { getAuthState, clearAuthState } from "@/app/libs/auth";
+import { getAuthState, clearAuthState, getTimeUntilExpiration, isTokenExpired } from "@/app/libs/auth";
+import { useTokenExpiration } from "@/app/hooks/useTokenExpiration";
 
 // Images
 import Logo from "@/app/public/images/Logo2.png";
@@ -44,6 +46,10 @@ const Header = () => {
   const [username, setUsername] = useState("");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showExpirationWarning, setShowExpirationWarning] = useState(false);
+
+  // Initialize token expiration monitoring
+  useTokenExpiration();
 
   useEffect(() => {
     // Get auth state using the utility function
@@ -52,6 +58,23 @@ const Header = () => {
       setUsername(storedUsername);
       setIsAdmin(storedIsAdmin);
     }
+
+    // Set up interval to check token expiration time
+    const updateExpirationTime = () => {
+      const timeLeft = getTimeUntilExpiration();
+      
+      // Show warning when less than 1 hour remaining
+      if (timeLeft > 0 && timeLeft < 3600000) { // 1 hour in milliseconds
+        setShowExpirationWarning(true);
+      } else {
+        setShowExpirationWarning(false);
+      }
+    };
+
+    updateExpirationTime();
+    const intervalId = setInterval(updateExpirationTime, 60000); // Update every minute
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleLogout = () => {
@@ -60,6 +83,7 @@ const Header = () => {
     setUsername("");
     setIsAdmin(false);
     setShowLogoutPopup(false);
+    setShowExpirationWarning(false);
     router.push("/login");
   };
 
@@ -75,6 +99,22 @@ const Header = () => {
   return (
     <>
       <header className="bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm border-b border-neutral-200">
+        {/* Token Expiration Warning Banner */}
+        {showExpirationWarning && username && (
+          <div className="bg-amber-50 border-b border-amber-200 px-4 py-2">
+            <div className="flex items-center justify-center text-amber-800 text-sm">
+              <AlertTriangle className="w-4 h-4 mr-2" />
+              <span>جلسه شما به زودی منقضی می‌شود. لطفاً دوباره وارد شوید.</span>
+              <button
+                onClick={handleLogout}
+                className="ml-3 px-3 py-1 bg-amber-600 text-white text-xs rounded-md hover:bg-amber-700 transition-colors"
+              >
+                ورود مجدد
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="mx-auto flex items-center justify-between h-16 sm:h-20 px-4">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center">

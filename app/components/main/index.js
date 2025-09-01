@@ -2,6 +2,8 @@
 
 import { apiUrl } from "../../libs/api";
 import React, { useState, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
+import { useLoading } from "@/app/context/LoadingContext";
 import Articles from "./articles";
 import SideNav from "./sideNav";
 import CustomNeshanMap from "../neshanMap";
@@ -12,15 +14,15 @@ import Slider from "./slider";
 import FeaturesSection from "./featuresSection";
 import CategoriesSection from "./categoriesSection";
 import LatestProductsSection from "./latestProductsSection";
+import SectionLoading from "../loadingSamples/SectionLoading";
 
 const Main = () => {
+  const pathname = usePathname();
   const [activeSection, setActiveSection] = useState("slider");
   const [latestProducts, setLatestProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [categoriesLoading, setCategoriesLoading] = useState(true);
-  const [categoriesError, setCategoriesError] = useState(null);
+  
+  const { setLoading, setError, clearError } = useLoading();
 
   const handleScroll = useCallback(() => {
     const sections = [
@@ -55,25 +57,38 @@ const Main = () => {
   }, [handleScroll]);
 
   useEffect(() => {
+    // Only fetch and set loading states on home page
+    if (pathname !== '/') return;
+
     const fetchLatestProducts = async () => {
       try {
+        setLoading('products', true);
+        clearError('products');
+        
         const response = await fetch(apiUrl("/products/"));
         if (!response.ok) throw new Error("خطا در دریافت محصولات جدید");
         const data = await response.json();
         const latest = data.slice(0, 4);
         setLatestProducts(latest);
+        
+        setLoading('products', false);
       } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+        setError('products', err.message);
+        setLoading('products', false);
       }
     };
     fetchLatestProducts();
-  }, []);
+  }, [pathname, setLoading, setError, clearError]);
 
   useEffect(() => {
+    // Only fetch and set loading states on home page
+    if (pathname !== '/') return;
+
     const fetchCategories = async () => {
       try {
+        setLoading('mainContent', true);
+        clearError('mainContent');
+        
         const token = localStorage.getItem("token");
         const headers = {
           "Content-Type": "application/json",
@@ -81,41 +96,42 @@ const Main = () => {
         if (token) {
           headers["Authorization"] = `Bearer ${token}`;
         }
-        const response = await fetch(apiUrl("/categories/", {
+        const response = await fetch(apiUrl("/categories/"), {
           headers,
-        }));
+        });
         if (!response.ok) throw new Error("خطا در دریافت دسته‌بندی‌ها");
         const data = await response.json();
         setCategories(data);
+        
+        setLoading('mainContent', false);
       } catch (err) {
-        setCategoriesError(err.message);
-      } finally {
-        setCategoriesLoading(false);
+        setError('mainContent', err.message);
+        setLoading('mainContent', false);
       }
     };
     fetchCategories();
-  }, []);
+  }, [pathname, setLoading, setError, clearError]);
 
   const features = [
     {
-      icon: <Zap className="w-4 h-4 sm:w-5 sm:h-5" />,
-      title: "کیفیت برتر",
-      description: "استانداردهای بین‌المللی",
+      icon: <Zap className="w-6 h-6" />,
+      title: "کیفیت بالا",
+      description: "محصولات با کیفیت و قابل اعتماد",
     },
     {
-      icon: <Shield className="w-4 h-4 sm:w-5 sm:h-5" />,
+      icon: <Shield className="w-6 h-6" />,
       title: "گارانتی معتبر",
-      description: "۲ سال گارانتی",
+      description: "گارانتی کامل برای تمام محصولات",
     },
     {
-      icon: <Truck className="w-4 h-4 sm:w-5 sm:h-5" />,
+      icon: <Truck className="w-6 h-6" />,
       title: "ارسال سریع",
-      description: "ارسال در کمتر از ۲۴ ساعت",
+      description: "ارسال در کمترین زمان ممکن",
     },
     {
-      icon: <Clock className="w-4 h-4 sm:w-5 sm:h-5" />,
-      title: "پشتیبانی ۲۴/۷",
-      description: "همیشه در خدمت شما",
+      icon: <Clock className="w-6 h-6" />,
+      title: "پشتیبانی 24/7",
+      description: "پشتیبانی شبانه‌روزی",
     },
   ];
 
@@ -163,8 +179,8 @@ const Main = () => {
         {/* Categories Section */}
         <CategoriesSection
           categories={categories}
-          loading={categoriesLoading}
-          error={categoriesError}
+          loading={false} // Categories are now fetched directly
+          error={null} // Categories are now fetched directly
         />
         {/* Latest Products Section */}
         <section
@@ -175,8 +191,8 @@ const Main = () => {
             <div className="max-w-[95%] mx-auto">
               <LatestProductsSection
                 latestProducts={latestProducts}
-                loading={loading}
-                error={error}
+                loading={false} // Products are now fetched directly
+                error={null} // Products are now fetched directly
               />
             </div>
           </div>
@@ -189,17 +205,16 @@ const Main = () => {
           <div className="mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
             <div className="max-w-[95%] mx-auto">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-neutral-800">
-                مقالات و اخبار
+                مقالات
               </h2>
               <Articles />
             </div>
           </div>
         </section>
-
         {/* Contact Us Section */}
         <section
           id="contact-us"
-          className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-neutral-50"
+          className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-white"
         >
           <div className="mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
             <div className="max-w-[95%] mx-auto">
@@ -207,22 +222,21 @@ const Main = () => {
             </div>
           </div>
         </section>
-
         {/* Common Questions Section */}
         <section
           id="common-questions"
-          className="w-full py-8 sm:py-10 md:py-12 lg:py-16"
+          className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-neutral-50"
         >
           <div className="mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
             <div className="max-w-[95%] mx-auto">
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-neutral-800">
-                سوالات متداول
-              </h2>
               <CommonQuestions />
             </div>
           </div>
         </section>
       </main>
+
+      {/* Map Section */}
+      <CustomNeshanMap />
     </div>
   );
 };

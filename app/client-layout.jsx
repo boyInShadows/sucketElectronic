@@ -4,12 +4,21 @@ import { usePathname, useRouter } from "next/navigation";
 import Header from "@/app/components/header";
 import { useEffect, useState } from "react";
 import { isAuthenticated, isAdmin } from "@/app/libs/auth";
+import { useTokenExpiration } from "@/app/hooks/useTokenExpiration";
+import { usePageReady } from "@/app/hooks/usePageReady";
+import MainPageLoading from "@/app/components/loadingSamples/MainPageLoading";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Initialize token expiration monitoring
+  useTokenExpiration();
+
+  // Initialize page ready monitoring (only for home page)
+  usePageReady();
 
   useEffect(() => {
     setIsLoggedIn(isAuthenticated());
@@ -36,6 +45,7 @@ export default function ClientLayout({ children }) {
 
   return (
     <>
+      <MainPageLoading />
       {!shouldHideHeader && <Header />}
       <main>{children}</main>
     </>

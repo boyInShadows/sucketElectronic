@@ -26,9 +26,8 @@ const Login = () => {
     try {
       const response = await login(formData);
       
-      // Debug: Log the response to see the structure
-      console.log("Login response:", response);
-      console.log("User object:", response.user);
+      
+
       
       // Store auth state using the utility function
       // Check for different possible admin field names from Django
@@ -40,7 +39,7 @@ const Login = () => {
                      response.is_staff || 
                      false;
       
-      console.log("Detected admin status:", isAdmin);
+
       
       setAuthState(
         response.access,

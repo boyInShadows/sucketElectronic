@@ -13,21 +13,13 @@ export default function UsersClient() {
   useEffect(() => {
     setMounted(true);
     const auth = getAuthState();
-    console.log("UsersClient - Auth state retrieved:", { 
-      token: !!auth.token, 
-      isAdmin: auth.isAdmin,
-      username: auth.username 
-    });
+
     setAuthState(auth);
   }, []);
 
   useEffect(() => {
     if (mounted && (!authState.token || !authState.isAdmin)) {
-      console.log("UsersClient - Redirecting to home:", { 
-        mounted, 
-        hasToken: !!authState.token, 
-        isAdmin: authState.isAdmin 
-      });
+
       router.replace("/");
     }
   }, [mounted, authState, router]);

@@ -20,12 +20,7 @@ import { useRouter } from "next/navigation";
 const UsersPageContent = ({ token, isAdmin }) => {
   const router = useRouter();
   
-  // Debug: Log the props received
-  console.log("UsersPageContent - Props received:", { 
-    token: !!token, 
-    tokenLength: token ? token.length : 0,
-    isAdmin 
-  });
+
   
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,8 +41,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        // Debug: Log authentication state
-        console.log("UsersPageContent - Auth state:", { token: !!token, isAdmin });
+
         
         // Check if user is admin before making the API call
         if (!isAdmin) {
@@ -59,7 +53,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
           return;
         }
 
-        console.log("UsersPageContent - Making API request to:", apiUrl("/users/"));
+
         const response = await fetch(apiUrl("/users/"), {
           method: "GET",
           headers: {
@@ -69,7 +63,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
           },
         });
         
-        console.log("UsersPageContent - API response status:", response.status);
+
         
         if (!response.ok) {
           if (response.status === 401) {
@@ -87,7 +81,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
           }
         }
         const data = await response.json();
-        console.log("UsersPageContent - Users data received:", data.length, "users");
+
         setUsers(data);
       } catch (err) {
         console.error("UsersPageContent - Error:", err);
@@ -114,10 +108,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
   const handleSecondConfirm = async () => {
     if (!isDeleteEnabled) return;
     try {
-      console.log("UsersPageContent - Deleting user:", selectedUser.id);
-      console.log("UsersPageContent - Token exists:", !!token);
-      console.log("UsersPageContent - Token length:", token ? token.length : 0);
-      console.log("UsersPageContent - Delete API URL:", apiUrl(`/users/${selectedUser.id}/`));
+
       
       const response = await fetch(apiUrl(`/users/${selectedUser.id}/`), {
         method: "DELETE",
@@ -127,7 +118,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
         },
       });
       
-      console.log("UsersPageContent - Delete response status:", response.status);
+      
       
       if (!response.ok) {
         throw new Error("خطا در حذف کاربر");
@@ -158,10 +149,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
     setMessagesLoading(true);
     setMessagesError("");
     try {
-      console.log("UsersPageContent - Fetching messages");
-      console.log("UsersPageContent - Token exists:", !!token);
-      console.log("UsersPageContent - Token length:", token ? token.length : 0);
-      console.log("UsersPageContent - Messages API URL:", apiUrl("/messages/"));
+      
       
       const response = await fetch(apiUrl("/messages/"), {
         headers: {
@@ -170,7 +158,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
         },
       });
       
-      console.log("UsersPageContent - Messages response status:", response.status);
+      
       
       if (!response.ok) {
         throw new Error("خطا در دریافت پیام‌ها");
@@ -196,10 +184,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
       const shouldDelete = window.confirm("آیا از حذف این پیام اطمینان دارید؟");
       if (!shouldDelete) return;
       
-      console.log("UsersPageContent - Deleting message:", id);
-      console.log("UsersPageContent - Token exists:", !!token);
-      console.log("UsersPageContent - Token length:", token ? token.length : 0);
-      console.log("UsersPageContent - Delete message API URL:", apiUrl(`/messages/${id}/`));
+
       
       const response = await fetch(apiUrl(`/messages/${id}/`), {
         method: "DELETE",
@@ -209,7 +194,7 @@ const UsersPageContent = ({ token, isAdmin }) => {
         },
       });
       
-      console.log("UsersPageContent - Delete message response status:", response.status);
+      
       
       if (!response.ok) throw new Error("خطا در حذف پیام");
       setMessages(messages.filter((msg) => msg.id !== id));

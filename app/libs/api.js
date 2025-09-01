@@ -26,12 +26,35 @@ export function apiUrl(path) {
   const base = getApiBase();
   const fullUrl = `${base}/api${fullPath}`;
   
-  // Debug: Log the API URL being generated
-  if (typeof window !== 'undefined') {
-    console.log(`🔍 apiUrl(${path}) -> ${fullUrl} (base: ${base})`);
-  }
+  
   
   return fullUrl;
+}
+
+// Check if token is expired
+function isTokenExpired() {
+  if (typeof window === 'undefined') return true;
+  
+  const expirationTime = localStorage.getItem('tokenExpiration');
+  if (!expirationTime) return true;
+  
+  return Date.now() >= parseInt(expirationTime);
+}
+
+// Handle expired token
+function handleExpiredToken() {
+  if (typeof window === 'undefined') return;
+  
+  // Clear auth state
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  localStorage.removeItem('is_admin');
+  localStorage.removeItem('tokenExpiration');
+  
+  // Redirect to login page
+  if (window.location.pathname !== '/login') {
+    window.location.href = '/login';
+  }
 }
 
 // Auth headers helper (safe in browser and server)
@@ -39,7 +62,11 @@ export function authHeaders() {
   const h = { 'Content-Type': 'application/json' };
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
-    if (token) h.Authorization = `Bearer ${token}`;
+    if (token && !isTokenExpired()) {
+      h.Authorization = `Bearer ${token}`;
+    } else if (isTokenExpired()) {
+      handleExpiredToken();
+    }
   }
   return h;
 }
@@ -69,11 +96,13 @@ function getHeaders() {
     "Content-Type": "application/json",
   };
 
-  // Add auth token if exists
+  // Add auth token if exists and not expired
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("token");
-    if (token) {
+    if (token && !isTokenExpired()) {
       headers["Authorization"] = `Bearer ${token}`;
+    } else if (isTokenExpired()) {
+      handleExpiredToken();
     }
   }
 
