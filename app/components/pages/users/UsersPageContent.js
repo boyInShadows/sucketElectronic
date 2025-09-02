@@ -16,14 +16,14 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useLoading } from "@/app/context/LoadingContext";
+import SectionLoading from "@/app/components/loadingSamples/SectionLoading";
 
 const UsersPageContent = ({ token, isAdmin }) => {
   const router = useRouter();
-  
-
+  const { setLoading, setError: setLoadingError } = useLoading();
   
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showFirstConfirm, setShowFirstConfirm] = useState(false);
   const [showSecondConfirm, setShowSecondConfirm] = useState(false);
@@ -41,18 +41,17 @@ const UsersPageContent = ({ token, isAdmin }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-
+        setLoading("userProfile", true);
         
         // Check if user is admin before making the API call
         if (!isAdmin) {
           console.error("UsersPageContent - User is not admin");
-          setError(
+          setLoadingError("userProfile", 
             "شما دسترسی لازم برای مشاهده این صفحه را ندارید. لطفا با یک حساب مدیر کل وارد شوید."
           );
-          setLoading(false);
+          setLoading("userProfile", false);
           return;
         }
-
 
         const response = await fetch(apiUrl("/users/"), {
           method: "GET",
@@ -62,8 +61,6 @@ const UsersPageContent = ({ token, isAdmin }) => {
             Accept: "application/json",
           },
         });
-        
-
         
         if (!response.ok) {
           if (response.status === 401) {
@@ -85,13 +82,13 @@ const UsersPageContent = ({ token, isAdmin }) => {
         setUsers(data);
       } catch (err) {
         console.error("UsersPageContent - Error:", err);
-        setError(err.message);
+        setLoadingError("userProfile", err.message);
       }
-      setLoading(false);
+      setLoading("userProfile", false);
     };
 
     fetchUsers();
-  }, [token, isAdmin]);
+  }, [token, isAdmin, setLoading, setLoadingError]);
 
   const handleDeleteClick = (user) => {
     setSelectedUser(user);
@@ -149,16 +146,12 @@ const UsersPageContent = ({ token, isAdmin }) => {
     setMessagesLoading(true);
     setMessagesError("");
     try {
-      
-      
       const response = await fetch(apiUrl("/messages/"), {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-      
-      
       
       if (!response.ok) {
         throw new Error("خطا در دریافت پیام‌ها");
@@ -216,29 +209,16 @@ const UsersPageContent = ({ token, isAdmin }) => {
       msg.message.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-neutral-600">در حال بارگذاری...</p>
-        </div>
-      </div>
-    );
-  }
-
+  // Use SectionLoading for consistent loading and error handling
   if (error) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
-          <button
-            onClick={() => router.push("/")}
-            className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors duration-300"
-          >
-            بازگشت به صفحه اصلی
-          </button>
-        </div>
+        <SectionLoading 
+          isLoading={false}
+          error={error}
+          onRetry={() => window.location.reload()}
+          className="min-h-screen"
+        />
       </div>
     );
   }
@@ -421,13 +401,18 @@ const UsersPageContent = ({ token, isAdmin }) => {
             {/* Content */}
             <div className="p-6 max-h-[70vh] overflow-y-auto bg-white/60">
               {messagesLoading ? (
-                <div className="flex items-center justify-center py-16">
-                  <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
-                </div>
+                <SectionLoading 
+                  isLoading={true}
+                  size="40"
+                  className="py-16"
+                />
               ) : messagesError ? (
-                <div className="text-red-500 text-center py-16">
-                  {messagesError}
-                </div>
+                <SectionLoading 
+                  isLoading={false}
+                  error={messagesError}
+                  onRetry={handleShowMessages}
+                  className="py-16"
+                />
               ) : filteredMessages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16">
                   <img

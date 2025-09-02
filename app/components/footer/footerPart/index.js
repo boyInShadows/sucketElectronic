@@ -100,7 +100,7 @@ const FooterPart = () => {
             </div>
 
             {/* Social Media */}
-            <div className="order-3">
+            {/* <div className="order-3">
               <h3 className="text-base sm:text-lg font-bold mb-4 text-right">
                 شبکه‌های اجتماعی
               </h3>
@@ -118,7 +118,7 @@ const FooterPart = () => {
                   </a>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Copyright */}

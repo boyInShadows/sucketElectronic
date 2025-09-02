@@ -96,6 +96,15 @@ const Header = () => {
         ]
       : navLinks;
 
+  // Add users link to mobile navigation if logged in and is admin
+  const allBottomNavLinks =
+    username && isAdmin
+      ? [
+          ...bottomNavLinks,
+          { name: "مدیریت کاربران", href: "/users", icon: UserIcon },
+        ]
+      : bottomNavLinks;
+
   return (
     <>
       <header className="bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm border-b border-neutral-200">
@@ -182,12 +191,13 @@ const Header = () => {
 
       {/* Bottom Navigation (mobile only) */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-2xl rounded-t-2xl border-t border-neutral-200 flex justify-around items-center h-20 md:hidden px-2"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-2xl rounded-t-2xl border-t border-neutral-200 flex justify-around items-center h-20 md:hidden px-1"
         style={{ boxShadow: "0 -8px 32px 0 rgba(80,80,180,0.10)" }}
         aria-label="پیمایش اصلی موبایل"
       >
-        {bottomNavLinks.map((link) => {
+        {allBottomNavLinks.map((link) => {
           const isActive = pathname === link.href;
+          const isAdminLink = link.name === "مدیریت کاربران";
           return (
             <Link
               key={link.name}
@@ -196,26 +206,34 @@ const Header = () => {
               tabIndex={0}
               aria-current={isActive ? "page" : undefined}
             >
-              {/* Active indicator */}
-              <span
-                className={`absolute top-2 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full transition-all duration-200 pointer-events-none ${
-                  isActive ? "bg-primary/10" : ""
-                }`}
-              ></span>
-              <link.icon
-                className={`relative z-10 w-8 h-8 mb-1 transition-colors duration-200 ${
-                  isActive
-                    ? "text-primary"
-                    : "text-neutral-400 group-hover:text-primary"
-                }`}
-              />
-              <span
-                className={`relative z-10 text-sm font-bold transition-colors duration-200 ${
-                  isActive
-                    ? "text-primary"
-                    : "text-neutral-500 group-hover:text-primary"
-                }`}
-              >
+                             {/* Active indicator */}
+               <span
+                 className={`absolute top-2 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full transition-all duration-200 pointer-events-none ${
+                   isActive ? "bg-primary/10" : ""
+                 }`}
+               ></span>
+                             <link.icon
+                 className={`relative z-10 mb-1 transition-colors duration-200 ${
+                   isAdminLink 
+                     ? "w-5 h-5" // Smaller icon for admin link
+                     : "w-6 h-6" // Smaller for other links when admin is present
+                 } ${
+                   isActive
+                     ? "text-primary"
+                     : "text-neutral-400 group-hover:text-primary"
+                 }`}
+               />
+                             <span
+                 className={`relative z-10 font-bold transition-colors duration-200 ${
+                   isAdminLink 
+                     ? "text-[0.65rem]" // Smaller text for admin link
+                     : "text-[0.7rem]" // Smaller text for other links when admin is present
+                 } ${
+                   isActive
+                     ? "text-primary"
+                     : "text-neutral-500 group-hover:text-primary"
+                 }`}
+               >
                 {link.name}
               </span>
             </Link>
