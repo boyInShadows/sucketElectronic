@@ -53,6 +53,29 @@ const navigationItems = [
 ];
 
 export default function SideNav({ activeSection, onSectionClick }) {
+  const [footerOverlapPx, setFooterOverlapPx] = useState(0);
+
+  useEffect(() => {
+    const handlePosition = () => {
+      const footer = document.getElementById("site-footer");
+      if (!footer) {
+        setFooterOverlapPx(0);
+        return;
+      }
+      const rect = footer.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const overlap = Math.max(0, viewportHeight - rect.top);
+      setFooterOverlapPx(overlap);
+    };
+
+    handlePosition();
+    window.addEventListener("scroll", handlePosition, { passive: true });
+    window.addEventListener("resize", handlePosition);
+    return () => {
+      window.removeEventListener("scroll", handlePosition);
+      window.removeEventListener("resize", handlePosition);
+    };
+  }, []);
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -71,7 +94,12 @@ export default function SideNav({ activeSection, onSectionClick }) {
     <motion.div
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
-      className="fixed right-8 top-1/3 -translate-y-1/2 z-50 hidden lg:block"
+      className={`fixed right-8 z-50 hidden lg:block`}
+      style={
+        footerOverlapPx > 0
+          ? { bottom: Math.min(footerOverlapPx + 24, window.innerHeight - 80), top: "auto", transform: "none" }
+          : { top: "33%", transform: "translateY(-50%)" }
+      }
     >
       <div className="flex flex-col items-center gap-6">
         {navigationItems.map((item) => (

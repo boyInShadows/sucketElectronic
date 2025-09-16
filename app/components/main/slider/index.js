@@ -128,7 +128,7 @@ export default function ProductSlider() {
               <div className="absolute inset-0 bg-black/50" />
 
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-l from-black/70 via-black/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-l from-black/50 via-black/50 to-transparent" />
 
               {/* Content */}
               <div className="relative h-full flex items-center justify-start px-2 sm:px-8 md:px-12 lg:px-24">
