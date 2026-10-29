@@ -2,7 +2,9 @@
 
 A Persian, right-to-left storefront for automotive electrical connectors and related parts. This is the **Next.js frontend** of the client project; its Django API is maintained in the separate [SucketElectronicBackend repository](https://github.com/boyInShadows/SucketElectronicBackend).
 
-**Status:** existing client application with a locally verified catalog connection. Commercial launch, live payment processing and complete authentication/order flows were not established by this review. Ramtin's client-project involvement is confirmed; sole authorship of both repositories is not claimed.
+**Status:** existing client application with a locally verified catalog connection. Commercial launch, live payment processing and complete authentication/order flows were not established by this review.
+
+**Ramtin Farzane's contribution:** development of both the frontend and backend, confirmed by Ramtin.
 
 ![Running storefront with a synthetic local Django catalog](docs/artifacts/storefront-desktop.png)
 
