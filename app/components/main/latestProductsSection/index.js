@@ -3,7 +3,6 @@ import CardProductComponent from "../products/cartProductComponent";
 
 const LatestProductsSection = ({ latestProducts, loading, error }) => (
   <section
-    id="latest-products"
     className="w-full py-8 sm:py-10 md:py-12 lg:py-16 bg-white"
   >
     <div className="container mx-auto px-4 xs:px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 2xl:px-12">

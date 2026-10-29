@@ -1,0 +1,28 @@
+{
+  "mode": "production web build with synthetic real Django backend",
+  "storefront_http": 200,
+  "django_catalog_records": 4,
+  "next_product_proxy_http": 200,
+  "legacy_endpoint_get_status": {
+    "/api/auth/session": 404,
+    "/api/checkout": 404
+  },
+  "desktop": 1440,
+  "mobile": 390,
+  "mobile_dimensions": {
+    "viewport": 390,
+    "content": 390
+  },
+  "page_errors": [],
+  "regression": {
+    "issue": "duplicate latest-products DOM target",
+    "before": 2,
+    "after": 1,
+    "fix": "Removed only inner duplicate ID; outer navigation target retained"
+  },
+  "external_provider_requests": "blocked; no map/SMS/payment service contacted",
+  "limits": [
+    "No auth/cart/order/payment end-to-end verification.",
+    "Build exit 0 still includes lint diagnostic; dependency audit has unresolved findings."
+  ]
+}
