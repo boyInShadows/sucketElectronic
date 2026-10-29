@@ -1,0 +1,13 @@
+{
+  "base_revision": "a2eb1afbdcba",
+  "runtime": "Node24.11.1/npm11.6.2",
+  "install": "npm ci exited 0; published lockfile retained",
+  "results": [
+    {
+      "command": "npm run lint",
+      "exit_code": 1,
+      "seconds": 1.15,
+      "output": "\n> my-ecommerce@0.1.0 lint\n> next lint\n\nCannot serialize key \"parse\" in parser: Function values are not supported.\n"
+    }
+  ]
+}
